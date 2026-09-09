@@ -1,0 +1,102 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Image from "next/image";
+import Link from "next/link";
+
+const dummyData = [
+  {
+    id: 1,
+    title: "Custom Branded T-Shirts",
+    description: "High-quality custom apparel designed to showcase your brand.",
+    image: "/local/products/1.webp",
+  },
+  {
+    id: 2,
+    title: "Laptop Sleeve",
+    description:
+      "Protect laptops with a sleek, durable sleeve for work and travel.",
+    image: "/local/products/2.webp",
+  },
+  {
+    id: 3,
+    title: "Insulated Water Bottle",
+    description:
+      "A stylish insulated bottle that keeps drinks fresh while showcasing your brand.",
+    image: "/local/products/3.webp",
+  },
+  {
+    id: 4,
+    title: "Portable Bluetooth Speaker",
+    description:
+      "Compact wireless speakers delivering impressive sound and lasting brand impact.",
+    image: "/local/products/4.webp",
+  },
+  {
+    id: 5,
+    title: "Portable Bluetooth Speaker",
+    description:
+      "Compact wireless speakers delivering impressive sound and lasting brand impact.",
+    image: "/local/products/5.webp",
+  },
+  {
+    id: 6,
+    title: "Portable Bluetooth Speaker",
+    description:
+      "Compact wireless speakers delivering impressive sound and lasting brand impact.",
+    image: "/local/products/6.webp",
+  },
+];
+
+export function ProductsCarousel() {
+  return (
+    <Carousel
+      opts={{
+        align: "start",
+        loop: false,
+      }}
+      className="w-full mt-12"
+    >
+      <CarouselContent>
+        {dummyData.map((item) => (
+          <CarouselItem
+            key={item.id}
+            className="basis-[80%] md:basis-1/3 lg:basis-1/4"
+          >
+            <Link href={"/"}>
+              <div className="group space-y-2 bg-white rounded-xl p-2">
+                <div className="bg-secondary flex items-center justify-center w-full aspect-square rounded-lg overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={"gift"}
+                    width={150}
+                    height={150}
+                    className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <div className="px-2 py-1 space-y-1.5">
+                  <h5 className="font-semibold">{item.title}</h5>
+                  <p className="text-[13px] text-[#414651] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious
+        size="icon-lg"
+        className="-top-[calc(100%+4.5rem)] lg:-top-[calc(100%+9rem)] left-auto right-12 bg-transparent border-black text-black hover:bg-primary hover:text-white hover:border-primary"
+      />
+      <CarouselNext
+        size="icon-lg"
+        className="-top-[calc(100%+4.5rem)] lg:-top-[calc(100%+9rem)] right-0 bg-transparent border-black text-black hover:bg-primary hover:text-white hover:border-primary"
+      />
+    </Carousel>
+  );
+}
