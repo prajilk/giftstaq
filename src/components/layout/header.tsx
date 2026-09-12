@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import { NavMenu } from "./nav-menu";
 import Link from "next/link";
+import { CartSheet } from "../sheets/cart-sheet";
 
 const Header = () => {
   return (
@@ -40,13 +41,7 @@ const Header = () => {
                 <Search />
               </Button>
             </div>
-            <Button
-              size="icon"
-              variant="secondary"
-              className="bg-white cursor-pointer shadow lg:shadow-none"
-            >
-              <ShoppingCart />
-            </Button>
+            <CartSheet />
             <Button
               size="icon"
               variant="secondary"

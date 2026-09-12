@@ -9,7 +9,13 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-const HeroSection = ({ img }: { img: string }) => {
+const HeroSection = ({
+  img,
+  page = "Contact us",
+}: {
+  img: string;
+  page?: string;
+}) => {
   return (
     <section>
       <div className="container container-padding-x py-2">
@@ -20,9 +26,7 @@ const HeroSection = ({ img }: { img: string }) => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-primary">
-                Contact us
-              </BreadcrumbPage>
+              <BreadcrumbPage className="text-primary">{page}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

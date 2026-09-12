@@ -1,40 +1,11 @@
 export type PoseId = "front" | "folded" | "collar" | "side" | "back";
 
-export interface ColorVariant {
-  id: string;
-  name: string;
-  image: string;
-}
-
 export interface SizeOption {
-  id: string;
-  label: string;
+  value: string;
+  available: boolean;
 }
 
 export const POSES: PoseId[] = ["front", "folded", "collar", "side", "back"];
-
-export const COLOR_VARIANTS: ColorVariant[] = [
-  { id: "sage", name: "Sage Heather", image: "/local/products/1/green.webp" },
-  {
-    id: "charcoal",
-    name: "Charcoal Heather",
-    image: "/local/products/1/blue.webp",
-  },
-  {
-    id: "skyblue",
-    name: "Sky Blue Heather",
-    image: "/local/products/1/gray.webp",
-  },
-];
-
-export const SIZE_OPTIONS: SizeOption[] = [
-  { id: "s", label: "S" },
-  { id: "m", label: "M" },
-  { id: "l", label: "L" },
-  { id: "xl", label: "XL" },
-  { id: "2xl", label: "2XL" },
-  { id: "3xl", label: "3XL" },
-];
 
 export const PRODUCT = {
   eyebrow: "Classic Wear",
