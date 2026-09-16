@@ -173,3 +173,17 @@ export interface CartMutationResponse {
 export interface GetCartResponse {
   cart: Cart | null;
 }
+
+export interface ShopifyCollectionDetail {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  image: ShopifyImage | null;
+}
+
+export interface CollectionsResponse {
+  collections: {
+    edges: { node: ShopifyCollectionDetail }[];
+  };
+}

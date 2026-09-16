@@ -15,7 +15,7 @@ const FormSection = () => {
               Phone number
             </label>
             <span className="font-anton text-lg uppercase block">
-              +971 4 123 4567
+              +971 50 264 2503
             </span>
           </div>
           <div className="bg-secondary rounded-lg p-6">
@@ -24,14 +24,15 @@ const FormSection = () => {
               Email Address
             </label>
             <span className="font-anton text-lg uppercase block">
-              hello@giftstaq.com
+              sales@giftstaq.com
             </span>
           </div>
           <div className="bg-secondary rounded-lg p-6 col-span-2">
             <PinDrop />
             <label className="uppercase text-sm mt-4 mb-1 block">Address</label>
             <span className="font-anton text-lg uppercase block">
-              123 Business Avenu dubai, United arab emirates
+              Location - 17 Street - Industrial Area 13 - Industrial Area -
+              Sharjah
             </span>
           </div>
         </div>

@@ -98,19 +98,23 @@ const Footer = () => {
                 <li className="space-y-1">
                   <span className="text-xs block">Address</span>
                   <Link href="#" className="hover:text-white">
-                    123 Business Avenue, City, State, Country
+                    Location - 17 Street - Industrial Area 13 - Industrial Area
+                    - Sharjah
                   </Link>
                 </li>
                 <li className="space-y-1">
                   <span className="text-xs block">Email</span>
-                  <Link href="#" className="hover:text-white">
-                    hello@giftstaq.com
+                  <Link
+                    href="mailto:sales@giftstaq.com"
+                    className="hover:text-white"
+                  >
+                    sales@giftstaq.com
                   </Link>
                 </li>
                 <li className="space-y-1">
                   <span className="text-xs block">Phone</span>
-                  <Link href="#" className="hover:text-white">
-                    +91 98765 43210
+                  <Link href="tel:+971502642503" className="hover:text-white">
+                    +971 50 264 2503
                   </Link>
                 </li>
               </ul>
@@ -202,19 +206,26 @@ const Footer = () => {
                     <li className="space-y-1">
                       <span className="text-xs block">Address</span>
                       <Link href="#" className="hover:text-white no-underline!">
-                        123 Business Avenue, City, State, Country
+                        Location - 17 Street - Industrial Area 13 - Industrial
+                        Area - Sharjah
                       </Link>
                     </li>
                     <li className="space-y-1">
                       <span className="text-xs block">Email</span>
-                      <Link href="#" className="hover:text-white no-underline!">
-                        hello@giftstaq.com
+                      <Link
+                        href="mailto:sales@giftstaq.com"
+                        className="hover:text-white no-underline!"
+                      >
+                        sales@giftstaq.com
                       </Link>
                     </li>
                     <li className="space-y-1">
                       <span className="text-xs block">Phone</span>
-                      <Link href="#" className="hover:text-white no-underline!">
-                        +91 98765 43210
+                      <Link
+                        href="tel:+971502642503"
+                        className="hover:text-white no-underline!"
+                      >
+                        +971 50 264 2503
                       </Link>
                     </li>
                   </ul>
@@ -225,7 +236,7 @@ const Footer = () => {
 
           <div className="flex flex-col lg:flex-row gap-5 lg:gap-0 lg:items-center justify-between col-span-3 pb-5 pt-10 lg:pt-20">
             <div className="flex items-center gap-3">
-              <Link
+              {/* <Link
                 href="#"
                 className="bg-[#1D1D1D] rounded-full size-11 flex items-center justify-center"
               >
@@ -246,20 +257,22 @@ const Footer = () => {
                   width={30}
                   height={30}
                 />
-              </Link>
+              </Link> */}
               <Link
-                href="#"
+                href="https://www.linkedin.com/company/giftstaq/"
+                target="_blank"
                 className="bg-[#1D1D1D] rounded-full size-11 flex items-center justify-center"
               >
                 <Image
-                  src="/local/facebook.svg"
-                  alt="youtube"
+                  src="/local/in.svg"
+                  alt="linkedin"
                   width={30}
                   height={30}
                 />
               </Link>
               <Link
-                href="#"
+                href="https://www.instagram.com/giftstaq?stkn=Z202YXpyNHZvYTkw&utm_source=qr"
+                target="_blank"
                 className="bg-[#1D1D1D] rounded-full size-11 flex items-center justify-center"
               >
                 <Image

@@ -3,7 +3,7 @@ import Image from "next/image";
 const ServicesSection = () => {
   return (
     <section className="bg-secondary">
-      <div className="container container-padding-x py-7 lg:py-10 flex items-center justify-evenly overflow-x-scroll scrollbar-thin gap-5 lg:gap-0">
+      <div className="container container-padding-x py-7 lg:py-10 flex items-center justify-evenly overflow-x-scroll scrollbar-thin lg:scrollbar-none gap-5 lg:gap-0">
         <Service
           img="/local/verified.svg"
           title="Bulk Ordering"
