@@ -338,13 +338,17 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
               {addToCart.isPending ? "Adding..." : "Add to Bag"}
               <ShoppingCart className="mr-2 h-4 w-4" />
             </Button>
-            <Button
-              size="lg"
-              className="lg:flex-1 rounded-full bg-green-600 text-white hover:bg-green-700"
+            <Link
+              href={`https://wa.me/+971502642503?text=Buy ${product.title}`}
             >
-              Order by WhatsApp
-              <Whatsapp />
-            </Button>
+              <Button
+                size="lg"
+                className="lg:flex-1 rounded-full bg-green-600 text-white hover:bg-green-700"
+              >
+                Order by WhatsApp
+                <Whatsapp />
+              </Button>
+            </Link>
             {/* <Button
               onClick={handleBuyNow}
               disabled={!canBuy || buyNow.isPending}

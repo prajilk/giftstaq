@@ -20,3 +20,10 @@ export const contactUsSchema = z.object({
   subject: z.string().max(32, "Subject must be at most 32 characters."),
   message: z.string().max(1000, "Message must be at most 1000 characters."),
 });
+
+export const emailSubscribeSchema = z.object({
+  email: z
+    .email("Email is invalid.")
+    .min(5, "Email must be at least 5 characters.")
+    .max(32, "Email must be at most 32 characters."),
+});

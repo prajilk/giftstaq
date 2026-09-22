@@ -7,8 +7,14 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import Quote from "../icons/quote";
+import type { TestimonialBlock } from "@/payload-types";
+import { isImage } from "payload/shared";
 
-const TestimonialCarousel = () => {
+const TestimonialCarousel = ({
+  testimonials,
+}: {
+  testimonials: TestimonialBlock["testimonials"];
+}) => {
   return (
     <Carousel
       opts={{
@@ -17,29 +23,30 @@ const TestimonialCarousel = () => {
       className="w-full mt-8 lg:mt-16"
     >
       <CarouselContent>
-        {[1, 2, 3].map((data) => (
-          <CarouselItem key={data} className="basis-full">
+        {testimonials.map((data, i) => (
+          <CarouselItem key={data.id || i} className="basis-full">
             <div className="flex flex-col md:flex-row gap-6">
-              <Image
-                src={"/local/img1.webp"}
-                alt={""}
-                width={200}
-                height={200}
-                className="rounded-md object-cover aspect-square shrink-0"
-              />
+              {typeof data.image !== "string" &&
+                data.image.mimeType &&
+                isImage(data.image.mimeType) &&
+                data.image.url && (
+                  <Image
+                    src={data.image.url}
+                    alt={data.image.alt}
+                    width={200}
+                    height={200}
+                    className="rounded-md object-cover aspect-square shrink-0"
+                  />
+                )}
 
               <div>
                 <Quote />
-                <p className="mt-3 font-medium">
-                  See how Giftstaq helps businesses create memorable gifting
-                  experiences that strengthen relationships and leave a lasting
-                  impression.
-                </p>
+                <p className="mt-3 font-medium">{data.testimonial}</p>
 
                 <div className="flex flex-col mt-3">
-                  <span className="font-medium">David Miller</span>
+                  <span className="font-medium">{data.name}</span>
                   <span className="text-[#414651] text-sm">
-                    Marketing Director
+                    {data.designation}
                   </span>
                 </div>
               </div>

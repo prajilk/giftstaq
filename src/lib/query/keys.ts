@@ -17,3 +17,9 @@ export const searchKeys = {
   all: ["search"] as const,
   query: (term: string) => [...searchKeys.all, term] as const,
 };
+
+export const recommendationKeys = {
+  all: ["recommendations"] as const,
+  forProduct: (productId: string) =>
+    [...recommendationKeys.all, productId] as const,
+};

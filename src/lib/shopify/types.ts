@@ -187,3 +187,7 @@ export interface CollectionsResponse {
     edges: { node: ShopifyCollectionDetail }[];
   };
 }
+
+export interface ProductRecommendationsResponse {
+  productRecommendations: ShopifyProduct[];
+}

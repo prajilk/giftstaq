@@ -7,39 +7,18 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { HeroBlock, Media } from "@/payload-types";
+import { isImage } from "payload/shared";
 
 const DEFAULT_IMAGE_DURATION = 5000; // ms — only used for image slides
-
-type MediaProps = {
-  id: number;
-  documentId: string;
-  url: string;
-  alternativeText: string | null;
-};
-
-type HomeHeroProps = {
-  id: number;
-  title: string;
-  description: string;
-  background: {
-    id: number;
-    type: "image" | "video";
-    background: MediaProps;
-    responsive_image: MediaProps | null;
-  }[];
-};
-
-const SLIDE_DURATION = 5000; // ms, match your embla autoplay delay
-const SLIDE_COUNT = 5;
 
 const Hero = ({
   hero,
   autoPlay = true,
-}: Readonly<{ hero: HomeHeroProps; autoPlay?: boolean }>) => {
+}: Readonly<{ hero: HeroBlock; autoPlay?: boolean }>) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0); // 0-100, applies to the active dot
@@ -83,10 +62,10 @@ const Hero = ({
     setProgress(0);
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
-    const slide = hero.background[current];
+    const slide = hero.backgroundImage[current] as Media;
     const video = videoRefs.current[current];
 
-    if (slide.type === "video" && video) {
+    if (slide.mimeType && !isImage(slide.mimeType) && video) {
       // duration comes from the video itself — progress follows real playback time
       video.currentTime = 0;
 
@@ -105,8 +84,7 @@ const Hero = ({
     }
 
     // image slide: progress is a fixed-duration timer
-    const duration =
-      slide.type === "image" ? DEFAULT_IMAGE_DURATION : DEFAULT_IMAGE_DURATION;
+    const duration = DEFAULT_IMAGE_DURATION;
     const start = performance.now();
 
     const tick = (now: number) => {
@@ -124,11 +102,11 @@ const Hero = ({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, current, hero.background, autoPlay]);
+  }, [api, current, hero.backgroundImage, autoPlay]);
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  if (!hero || hero.background.length === 0) return null;
+  if (!hero || hero.backgroundImage.length === 0) return null;
 
   return (
     <section className="relative w-full -mt-20 h-176 min-h-screen text-white">
@@ -142,8 +120,8 @@ const Hero = ({
         className="size-full relative"
       >
         <CarouselContent className="ml-0">
-          {hero.background.map((data, index) => {
-            if (data.type === "video") {
+          {(hero.backgroundImage as Media[]).map((data, index) => {
+            if (data.mimeType && !isImage(data.mimeType)) {
               videoRefs.current[index] ??= null;
             }
 
@@ -152,16 +130,16 @@ const Hero = ({
                 <div
                   className="relative flex flex-col justify-center items-center h-full bg-no-repeat bg-center bg-cover gap-32 pb-10"
                   style={
-                    data.type === "image"
+                    data.mimeType && isImage(data.mimeType)
                       ? {
-                          backgroundImage: `url(${isMobile ? "/local/bg.webp" : "/local/bg.webp"})`,
+                          backgroundImage: `url(${isMobile ? data.url : data.url})`,
                         }
                       : {}
                   }
                 >
-                  {data.type === "video" && (
+                  {data.mimeType && !isImage(data.mimeType) && data.url && (
                     <video
-                      src={"/local/test.mp4"}
+                      src={data.url}
                       ref={(el) => {
                         videoRefs.current[index] = el;
                       }}
@@ -188,7 +166,7 @@ const Hero = ({
 
         <div className="absolute z-20 -left-5 lg:left-auto lg:right-0 bottom-6 lg:bottom-10 mx-10">
           <CarouselIndicator
-            count={hero.background.length}
+            count={hero.backgroundImage.length}
             current={current}
             progress={progress}
             onSelect={(i) => api?.scrollTo(i)}
@@ -198,7 +176,11 @@ const Hero = ({
 
       {/* If only one content is present in the hero */}
       <div className="absolute z-10 inset-0 flex flex-col lg:flex-row lg:items-end justify-end lg:justify-start gap-10 lg:gap-0 container container-padding-x py-20 lg:py-14">
-        <Content title={hero.title} description={hero.description} />
+        <Content
+          title={hero.title}
+          description={hero.description}
+          link={hero.link}
+        />
       </div>
 
       <div className="absolute inset-0 overflow-hidden after:absolute after:w-3/5 after:h-3/5 after:bg-radial after:from-black/60 after:to-transparent after:blur-xl after:-bottom-20 after:-left-32 after:rounded-[100%] before:absolute before:w-[60%] before:h-1/2 before:bg-radial before:from-primary/20 before:to-transparent before:blur-xl before:bottom-[-25%] before:right-[-20%] before:rounded-[100%]"></div>
@@ -211,9 +193,11 @@ export default Hero;
 function Content({
   title,
   description,
+  link,
 }: {
   title: string;
   description: string;
+  link: HeroBlock["link"];
 }) {
   return (
     <div className="max-w-xl space-y-3">
@@ -223,12 +207,20 @@ function Content({
       </p>
 
       <div className="space-x-3 mt-8">
-        <Link href="/contact-us" target="_blank">
-          <Button>Explore Products</Button>
-        </Link>
-        <Link href="/rental-hub" target="_blank">
+        {link[0] && (
+          <Link
+            href={link[0].link.href}
+            target={link[0].link.isExternal ? "_blank" : "_self"}
+          >
+            <Button>{link[0].link.label}</Button>
+          </Link>
+        )}
+        <Link
+          href={link[1].link.href}
+          target={link[1].link.isExternal ? "_blank" : "_self"}
+        >
           <Button variant={"secondary"} className="bg-white">
-            Book a Demo
+            {link[1].link.label}
           </Button>
         </Link>
       </div>

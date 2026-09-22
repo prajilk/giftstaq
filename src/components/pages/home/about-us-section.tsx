@@ -6,8 +6,18 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { forwardRef, useEffect, useRef } from "react";
+import { AboutUsBlock, Media } from "@/payload-types";
+import Link from "next/link";
+import { isImage } from "payload/shared";
 
-const AboutUsSection = () => {
+const AboutUsSection = ({
+  card,
+  description,
+  heading,
+  image1,
+  image2,
+  link,
+}: AboutUsBlock) => {
   const triggerRef = useRef<HTMLDivElement>(null);
   const card1Ref = useRef(null);
   const card2Ref = useRef(null);
@@ -97,39 +107,39 @@ const AboutUsSection = () => {
       <div className="container container-padding-x py-12 lg:py-16">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-5 lg:gap-0">
           <h1 className="text-3xl lg:text-4xl font-anton uppercase max-w-lg">
-            Making corporate gifting simple, thoughtful and memorable
+            {heading}
           </h1>
           <div className="space-y-4 lg:space-y-6">
-            <p className="max-w-lg">
-              Giftstaq helps businesses create meaningful connections through
-              premium corporate gifts and branded merchandise. From custom
-              branding to reliable delivery
-            </p>
-            <Button variant={"secondary"} className="bg-white">
-              Learn More About Us
-            </Button>
+            <p className="max-w-lg">{description}</p>
+            <Link
+              href={link.href}
+              target={link.isExternal ? "_blank" : "_self"}
+            >
+              <Button variant={"secondary"} className="bg-white">
+                {link.label}
+              </Button>
+            </Link>
           </div>
         </div>
 
         <div className="flex lg:hidden gap-4 group mt-12 overflow-x-scroll scrollbar-thin">
           <Card
-            value="500+"
-            label="Premium Products"
-            description="Explore a curated collection of high-quality corporate gifts and
-            branded merchandise for every business occasion."
+            value={card[0].value}
+            label={card[0].label}
+            description={card[0].description}
             ref={null}
             className="w-[80%]"
           />
-          <Card image="/local/img1.webp" ref={null} className="w-[80%]" />
+          <Card image={image1} ref={null} className="w-[80%]" />
           <Card
-            value="1,000+"
-            description="Businesses trust Giftstaq for reliable fulfillment and timely delivery of corporate gifting campaigns."
-            label="Orders Delivered"
+            value={card[1].value}
+            description={card[1].description}
+            label={card[1].label}
             color="red"
             ref={null}
             className="w-[80%]"
           />
-          <Card image="/local/img2.webp" ref={null} className="w-[80%]" />
+          <Card image={image2} ref={null} className="w-[80%]" />
         </div>
 
         <div
@@ -139,21 +149,20 @@ const AboutUsSection = () => {
           className="hidden lg:grid grid-cols-4 gap-4 group mt-20"
         >
           <Card
-            value="500+"
-            label="Premium Products"
-            description="Explore a curated collection of high-quality corporate gifts and
-            branded merchandise for every business occasion."
+            value={card[0].value}
+            label={card[0].label}
+            description={card[0].description}
             ref={card1Ref}
           />
-          <Card image="/local/img1.webp" ref={card2Ref} />
+          <Card image={image1} ref={card2Ref} />
           <Card
-            value="1,000+"
-            description="Businesses trust Giftstaq for reliable fulfillment and timely delivery of corporate gifting campaigns."
-            label="Orders Delivered"
+            value={card[1].value}
+            description={card[1].description}
+            label={card[1].label}
             color="red"
             ref={card3Ref}
           />
-          <Card image="/local/img2.webp" ref={card4Ref} />
+          <Card image={image2} ref={card4Ref} />
         </div>
       </div>
     </section>
@@ -166,7 +175,7 @@ type CardProps = {
   value?: string;
   label?: string;
   description?: string;
-  image?: string;
+  image?: string | Media;
   color?: "red" | "white";
   className?: string;
 };
@@ -182,9 +191,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           className,
         )}
       >
-        {image ? (
+        {image &&
+        typeof image !== "string" &&
+        image.mimeType &&
+        isImage(image.mimeType) &&
+        image.url ? (
           <Image
-            src={image}
+            src={image.url}
             alt={"image"}
             fill
             className="object-cover"

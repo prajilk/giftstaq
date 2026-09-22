@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group";
 import { useState } from "react";
 import { contactUsSchema } from "@/lib/zod";
+import { submitContactForm } from "@/actions/submitContactForm";
 
 const ContactForm = () => {
   const [loading, setLoading] = useState(false);
@@ -32,15 +33,16 @@ const ContactForm = () => {
     onSubmit: async ({ value }) => {
       try {
         setLoading(true);
+        const result = await submitContactForm(value);
+
+        if (!result.success) {
+          toast.error("Something went wrong!");
+          // console.error(result.error)
+          return;
+        }
+
         toast.success("Message sent successfully!");
         form.reset();
-        // const response = await submitContactUsForm(value);
-        // if (response.data) {
-        // 	toast.success("Message sent successfully!");
-        // 	form.reset();
-        // } else {
-        // 	toast.error("Something went wrong!");
-        // }
       } catch {
         toast.error("Something went wrong!");
       } finally {
@@ -209,7 +211,7 @@ const ContactForm = () => {
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
-                        placeholder="Project Type"
+                        placeholder="Subject"
                         autoComplete="off"
                         className="border-none px-2.5 py-5 bg-[#F5F5F5] rounded-full placeholder:text-sm"
                       />

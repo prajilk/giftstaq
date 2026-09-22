@@ -385,3 +385,39 @@ export const SEARCH_PRODUCTS_QUERY = gql`
     }
   }
 `;
+
+export const GET_PRODUCT_RECOMMENDATIONS_QUERY = gql`
+  query GetProductRecommendations($productId: ID!) {
+    productRecommendations(productId: $productId) {
+      id
+      handle
+      title
+      featuredImage {
+        url
+        altText
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      options(first: 10) {
+        name
+        optionValues {
+          name
+        }
+      }
+      collections(first: 1) {
+        edges {
+          node {
+            title
+            handle
+          }
+        }
+      }
+    }
+  }
+`;

@@ -6,8 +6,9 @@ import { getQueryClient } from "@/lib/query/get-query-client";
 import { collectionKeys } from "@/lib/query/keys";
 import { getCollections } from "@/lib/shopify/collections";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { CategoryBlock } from "@/payload-types";
 
-const CategorySection = async () => {
+const CategorySection = async ({ heading }: CategoryBlock) => {
   const queryClient = getQueryClient();
 
   await queryClient
@@ -20,9 +21,7 @@ const CategorySection = async () => {
   return (
     <section className="container container-padding-x py-12 lg:py-16 space-y-10">
       <div className="flex items-center justify-between">
-        <h1 className="font-anton uppercase text-3xl lg:text-4xl">
-          Find the perfect gift for every occasion
-        </h1>
+        <h1 className="font-anton uppercase text-3xl lg:text-4xl">{heading}</h1>
         <Link href="/collections" className="hidden lg:block">
           <Button variant="ghost" className="cursor-pointer">
             View all <ArrowRight />

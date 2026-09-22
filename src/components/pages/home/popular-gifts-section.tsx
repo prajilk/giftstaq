@@ -1,19 +1,21 @@
 import { ProductsCarousel } from "@/components/carousel/products-carousel";
+import type { PopularGiftBlock } from "@/payload-types";
 
-const PopularGiftsSection = () => {
+const PopularGiftsSection = ({
+  cards,
+  description,
+  heading,
+}: PopularGiftBlock) => {
+  if (!cards) return null;
   return (
     <section className="bg-[rgb(226,213,196)]">
       <div className="container container-padding-x py-12 lg:py-16 space-y-5">
         <h1 className="text-3xl lg:text-4xl font-anton uppercase max-w-lg">
-          Our most popular corporate gifts
+          {heading}
         </h1>
-        <p className="max-w-156">
-          Discover the products businesses love most. From everyday essentials
-          to premium gift sets, these best sellers are perfect for creating
-          memorable gifting experiences.
-        </p>
+        <p className="max-w-156">{description}</p>
 
-        <ProductsCarousel />
+        <ProductsCarousel cards={cards} />
       </div>
     </section>
   );

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -8,8 +6,9 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Header } from "@/payload-types";
 
-export function NavMenu() {
+export function NavMenu({ navLinks }: { navLinks: Header["navLinks"] }) {
   return (
     <NavigationMenu>
       <NavigationMenuList className="bg-white rounded-full hidden lg:flex">
@@ -46,12 +45,21 @@ export function NavMenu() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem> */}
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            className={navigationMenuTriggerStyle()}
-            render={<Link href="/products">Products</Link>}
-          />
-        </NavigationMenuItem>
+        {navLinks.map((link) => (
+          <NavigationMenuItem key={link.id}>
+            <NavigationMenuLink
+              className={navigationMenuTriggerStyle()}
+              render={
+                <Link
+                  href={link.link.href}
+                  target={link.link.isExternal ? "_blank" : "_self"}
+                >
+                  {link.link.label}
+                </Link>
+              }
+            />
+          </NavigationMenuItem>
+        ))}
         {/* <NavigationMenuItem>
           <NavigationMenuLink
             className={navigationMenuTriggerStyle()}
@@ -64,37 +72,7 @@ export function NavMenu() {
             render={<Link href="/solutions">Solutions</Link>}
           />
         </NavigationMenuItem> */}
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            className={navigationMenuTriggerStyle()}
-            render={<Link href="/contact-us">Contact us</Link>}
-          />
-        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  );
-}
-
-function ListItem({
-  title,
-  children,
-  href,
-  ...props
-}: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
-  return (
-    <li {...props}>
-      <NavigationMenuLink
-        render={
-          <Link href={href}>
-            <div className="flex flex-col gap-1 text-sm">
-              <div className="leading-none font-medium">{title}</div>
-              <div className="line-clamp-2 text-muted-foreground">
-                {children}
-              </div>
-            </div>
-          </Link>
-        }
-      />
-    </li>
   );
 }
