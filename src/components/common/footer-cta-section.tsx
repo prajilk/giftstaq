@@ -23,6 +23,7 @@ const FooterCTASection = ({
               src={image1.url}
               alt={image1.alt}
               fill
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover"
             />
           )}
@@ -51,6 +52,7 @@ const FooterCTASection = ({
               src={image2.url}
               alt={image2.alt}
               fill
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover"
             />
           )}
