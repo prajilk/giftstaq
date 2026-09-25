@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { HeroBlock, Media } from "@/payload-types";
 import { isImage } from "payload/shared";
+import { ContactFormModal } from "@/components/forms/form-modal";
 
 const DEFAULT_IMAGE_DURATION = 5000; // ms — only used for image slides
 
@@ -215,14 +216,19 @@ function Content({
             <Button>{link[0].link.label}</Button>
           </Link>
         )}
-        <Link
+        <ContactFormModal>
+          <Button variant={"secondary"} className="bg-white">
+            Book a demo
+          </Button>
+        </ContactFormModal>
+        {/* <Link
           href={link[1].link.href}
           target={link[1].link.isExternal ? "_blank" : "_self"}
         >
           <Button variant={"secondary"} className="bg-white">
             {link[1].link.label}
           </Button>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

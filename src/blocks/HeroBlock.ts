@@ -22,7 +22,7 @@ export const HeroBlock: Block = {
     {
       name: "link",
       type: "array",
-      maxRows: 2,
+      maxRows: 1,
       required: true,
       fields: [linkField()],
     },

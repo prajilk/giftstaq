@@ -16,10 +16,13 @@ const CollectionsPage = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <section className="container container-padding-x py-12 lg:py-16">
+      <section className="container container-padding-x pb-12 pt-6 lg:pt-8 lg:pb-16">
+        <h1 className="text-3xl lg:text-4xl font-anton uppercase mb-10">
+          Collections
+        </h1>
         <CategoryList
           first={100}
-          className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3"
+          className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-3"
         />
       </section>
     </HydrationBoundary>

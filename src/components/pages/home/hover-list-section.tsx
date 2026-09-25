@@ -1,15 +1,15 @@
 "use client";
 
+import { ContactFormModal } from "@/components/forms/form-modal";
 import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
 import type { HoverMarqueeBlock } from "@/payload-types";
 import Image from "next/image";
-import Link from "next/link";
 import { isImage } from "payload/shared";
 import { useState } from "react";
 
-export default function HoverList({ heading, link, rows }: HoverMarqueeBlock) {
+export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
   const [active, setActive] = useState<number | null>(null);
 
   if (!rows) return null;
@@ -20,14 +20,15 @@ export default function HoverList({ heading, link, rows }: HoverMarqueeBlock) {
         <h2 className="text-3xl lg:text-4xl font-anton uppercase max-w-sm">
           {heading}
         </h2>
-        <Link href={link.href} target={link.isExternal ? "_blank" : "_self"}>
+
+        <ContactFormModal>
           <Button
             variant="outline"
             className="bg-transparent border-black hidden lg:block"
           >
-            {link.label}
+            Book a demo
           </Button>
-        </Link>
+        </ContactFormModal>
       </div>
 
       <div className="w-full mt-14 lg:hidden grid grid-cols-2 gap-4">

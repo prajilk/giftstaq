@@ -492,11 +492,6 @@ export interface AboutUsBlock {
  */
 export interface HoverMarqueeBlock {
   heading: string;
-  link: {
-    label: string;
-    href: string;
-    isExternal?: boolean | null;
-  };
   rows: {
     label: string;
     images: (string | Media)[];
@@ -844,13 +839,6 @@ export interface AboutUsBlockSelect<T extends boolean = true> {
  */
 export interface HoverMarqueeBlockSelect<T extends boolean = true> {
   heading?: T;
-  link?:
-    | T
-    | {
-        label?: T;
-        href?: T;
-        isExternal?: T;
-      };
   rows?:
     | T
     | {

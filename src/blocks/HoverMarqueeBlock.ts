@@ -14,7 +14,6 @@ export const HoverMarqueeBlock: Block = {
       type: "text",
       required: true,
     },
-    linkField(),
     {
       name: "rows",
       type: "array",
