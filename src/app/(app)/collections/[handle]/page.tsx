@@ -6,6 +6,10 @@ import { collectionProductKeys } from "@/lib/query/keys";
 import { COLLECTION_SORT_MAP } from "@/lib/shopify/sort";
 import CollectionPageContent from "@/components/pages/collections/collection-page-content";
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function CollectionPage({
   params,
 }: {

@@ -614,14 +614,39 @@ export interface FooterCtaBlock {
 export interface Header {
   id: string;
   logo: string | Media;
-  navLinks: {
-    link: {
-      label: string;
-      href: string;
-      isExternal?: boolean | null;
-    };
-    id?: string | null;
-  }[];
+  navItems?:
+    | (
+        | {
+            label: string;
+            href: string;
+            isExternal?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'link';
+          }
+        | {
+            label: string;
+            href: string;
+            groups?:
+              | {
+                  collectionName: string;
+                  href: string;
+                  products?:
+                    | {
+                        product: string;
+                        href: string;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'submenu';
+          }
+      )[]
+    | null;
   offers: {
     offer: string;
     id?: string | null;
@@ -967,7 +992,7 @@ export interface FooterCtaBlockSelect<T extends boolean = true> {
  */
 export interface HeaderSelect<T extends boolean = true> {
   logo?: T;
-  navLinks?:
+  navItems?:
     | T
     | {
         link?:
@@ -976,8 +1001,31 @@ export interface HeaderSelect<T extends boolean = true> {
               label?: T;
               href?: T;
               isExternal?: T;
+              id?: T;
+              blockName?: T;
             };
-        id?: T;
+        submenu?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              groups?:
+                | T
+                | {
+                    collectionName?: T;
+                    href?: T;
+                    products?:
+                      | T
+                      | {
+                          product?: T;
+                          href?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
       };
   offers?:
     | T

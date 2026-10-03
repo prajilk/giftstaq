@@ -9,8 +9,8 @@ import Search from "./search";
 import type { Header as HeaderProps } from "@/payload-types";
 import { isImage } from "payload/shared";
 
-const Header = ({ logo, navLinks, offers }: HeaderProps) => {
-  if (!logo || !navLinks || typeof logo === "string") return null;
+const Header = ({ logo, navItems, offers }: HeaderProps) => {
+  if (!logo || !navItems || typeof logo === "string") return null;
 
   return (
     <>
@@ -30,7 +30,7 @@ const Header = ({ logo, navLinks, offers }: HeaderProps) => {
                 />
               </Link>
             )}
-            <NavMenu navLinks={navLinks} />
+            <NavMenu navLinks={navItems} />
           </div>
 
           <div className="flex items-center gap-2">
