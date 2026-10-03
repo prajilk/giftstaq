@@ -5,15 +5,32 @@ import { Button } from "@/components/ui/button";
 import { Info, Loader2 } from "lucide-react";
 import { SortSelection } from "./sort-selection";
 import ProductCard from "./product-card";
-import { useProducts } from "@/hooks/useProducts";
-import { ProductCardData, toProductCard } from "@/lib/shopify/transform";
+import { ProductCardData } from "@/lib/shopify/transform";
+import { useState } from "react";
+import { SortValue } from "@/lib/shopify/sort";
+import { ProductsListResult } from "@/lib/shopify/types";
+import { useProductsList } from "@/hooks/useProductsList";
 
-const ProductsListingSection = () => {
-  const { data, isLoading, isError } = useProducts();
+interface ProductsListingSectionProps {
+  title: string;
+  useProductsHook?: (sort: SortValue) => ProductsListResult;
+}
 
-  const products = (data?.products.edges ?? []).map(({ node }) =>
-    toProductCard(node),
-  );
+const ProductsListingSection = ({
+  title,
+  useProductsHook = useProductsList,
+}: ProductsListingSectionProps) => {
+  const [sort, setSort] = useState<SortValue>("latest");
+
+  const {
+    products,
+    isLoading,
+    isFetching,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useProductsHook(sort);
 
   return (
     <section className="container container-padding-x pb-12 pt-7 md:pb-16 md:pt-12">
@@ -33,15 +50,18 @@ const ProductsListingSection = () => {
         <div className="md:col-span-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h6 className="text-3xl font-anton uppercase">All Products</h6>
+              <h6 className="text-3xl font-anton uppercase">{title}</h6>
               <span className="text-xs text-[#414651]">
                 {products?.length} results
               </span>
+              {isFetching && !isFetchingNextPage && (
+                <Loader2 className="w-3 h-3 animate-spin text-gray-400" />
+              )}
             </div>
 
             <div className="items-center gap-2 hidden lg:flex">
               <span className="whitespace-nowrap text-sm">Sort by: </span>
-              <SortSelection />
+              <SortSelection value={sort} onChange={setSort} />
             </div>
           </div>
           {isLoading ? (
@@ -56,12 +76,23 @@ const ProductsListingSection = () => {
                   <ProductCard {...product} key={product.id} />
                 ))}
 
-                <Button
-                  variant="outline"
-                  className="col-span-2 lg:col-span-4 w-fit mx-auto mt-10 border-black bg-transparent"
-                >
-                  Load More
-                </Button>
+                {hasNextPage && (
+                  <Button
+                    variant="outline"
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="col-span-2 lg:col-span-4 w-fit mx-auto mt-10 border-black bg-transparent"
+                  >
+                    {isFetchingNextPage ? (
+                      <>
+                        <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                        Loading...
+                      </>
+                    ) : (
+                      "Load More"
+                    )}
+                  </Button>
+                )}
               </div>
             </>
           ) : (

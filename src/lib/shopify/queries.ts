@@ -1,9 +1,18 @@
-// lib/shopify/queries.ts
 import { gql } from "graphql-request";
 
 export const GET_PRODUCTS_QUERY = gql`
-  query GetProducts($first: Int!, $after: String) {
-    products(first: $first, after: $after) {
+  query GetProducts(
+    $first: Int!
+    $after: String
+    $sortKey: ProductSortKeys
+    $reverse: Boolean
+  ) {
+    products(
+      first: $first
+      after: $after
+      sortKey: $sortKey
+      reverse: $reverse
+    ) {
       edges {
         node {
           id
@@ -416,6 +425,89 @@ export const GET_PRODUCT_RECOMMENDATIONS_QUERY = gql`
             title
             handle
           }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_COLLECTION_BY_HANDLE_QUERY = gql`
+  query GetCollectionByHandle(
+    $handle: String!
+    $first: Int!
+    $after: String
+    $sortKey: ProductCollectionSortKeys
+    $reverse: Boolean
+  ) {
+    collection(handle: $handle) {
+      id
+      handle
+      title
+
+      bannerTitle: metafield(namespace: "custom", key: "banner_title") {
+        value
+      }
+      bannerDescription: metafield(
+        namespace: "custom"
+        key: "banner_description"
+      ) {
+        value
+      }
+      bannerImage: metafield(namespace: "custom", key: "banner_image") {
+        reference {
+          ... on MediaImage {
+            image {
+              url
+              altText
+              width
+              height
+            }
+          }
+        }
+      }
+
+      products(
+        first: $first
+        after: $after
+        sortKey: $sortKey
+        reverse: $reverse
+      ) {
+        edges {
+          node {
+            id
+            handle
+            title
+            featuredImage {
+              url
+              altText
+              width
+              height
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            options(first: 10) {
+              name
+              optionValues {
+                name
+              }
+            }
+            collections(first: 1) {
+              edges {
+                node {
+                  title
+                  handle
+                }
+              }
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }

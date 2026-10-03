@@ -1,3 +1,5 @@
+import { ProductCardData } from "./transform";
+
 export interface ShopifyImage {
   url: string;
   altText: string | null;
@@ -190,4 +192,34 @@ export interface CollectionsResponse {
 
 export interface ProductRecommendationsResponse {
   productRecommendations: ShopifyProduct[];
+}
+
+export interface ShopifyCollectionDetail {
+  id: string;
+  handle: string;
+  title: string;
+  bannerTitle: { value: string } | null;
+  bannerDescription: { value: string } | null;
+  bannerImage: {
+    reference: { image: ShopifyImage } | null;
+  } | null;
+  products: {
+    edges: { node: ShopifyProduct }[];
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  };
+}
+
+export interface CollectionByHandleResponse {
+  collection: ShopifyCollectionDetail | null;
+}
+
+// lib/shopify/types.ts
+export interface ProductsListResult {
+  products: ProductCardData[];
+  isLoading: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  hasNextPage: boolean | undefined;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 }

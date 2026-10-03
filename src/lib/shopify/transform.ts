@@ -1,5 +1,6 @@
 import { isValidJSON } from "../utils";
 import {
+  ShopifyCollectionDetail,
   ShopifyMetafield,
   ShopifyProduct,
   ShopifyProductDetail,
@@ -34,7 +35,7 @@ export function toProductCard(product: ShopifyProduct): ProductCardData {
           altText: product.featuredImage.altText || product.title,
         }
       : null,
-    price: product.priceRange.minVariantPrice,
+    price: product.priceRange?.minVariantPrice,
     colors: colorOption?.optionValues.map((v) => v.name) ?? [],
     collectionName: collectionEdges[0]?.node.title ?? null,
   };
@@ -157,5 +158,31 @@ export function toProductDetail(
     keyFeatures: keyFeatures ? JSON.parse(keyFeatures) : null,
     idealFor: idealFor ? JSON.parse(idealFor) : null,
     specs,
+  };
+}
+
+export interface CollectionHeroData {
+  title: string;
+  description: string | null;
+  image: { url: string; altText: string } | null;
+}
+
+export function toCollectionHero(
+  collection: ShopifyCollectionDetail,
+): CollectionHeroData {
+  return {
+    title: collection.bannerTitle?.value || collection.title, // fallback to native title if hero field is empty
+    description: collection.bannerDescription?.value || null,
+    image: collection.bannerImage?.reference?.image
+      ? {
+          url: collection.bannerImage?.reference?.image?.url || "/phero.webp",
+          altText:
+            collection.bannerImage?.reference?.image?.altText ||
+            collection.title,
+        }
+      : {
+          url: "/phero.webp",
+          altText: collection.title,
+        },
   };
 }

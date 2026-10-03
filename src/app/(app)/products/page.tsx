@@ -1,4 +1,3 @@
-import FooterCTASection from "@/components/common/footer-cta-section";
 import HeroSection from "@/components/pages/contact-us/hero-section";
 import CategoryList from "@/components/pages/home/category-list";
 import ProductsListingSection from "@/components/pages/products/products-listing-section";
@@ -17,9 +16,10 @@ const ProductsPage = async () => {
 
   // Runs on the server, fetches directly from Shopify (no self-HTTP-call)
   await queryClient
-    .query({
-      queryKey: productKeys.list(12),
+    .infiniteQuery({
+      queryKey: productKeys.list(12, "latest"),
       queryFn: () => getProducts(12),
+      initialPageParam: undefined,
     })
     .catch(noop); // don't crash SSR if Shopify is briefly down — client will retry
 
@@ -46,17 +46,8 @@ const ProductsPage = async () => {
         <CategoryList />
       </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductsListingSection />
+        <ProductsListingSection title="All Products" />
       </HydrationBoundary>
-      {productListingPage.layout?.map((block, index) => {
-        switch (block.blockType) {
-          case "footer-cta":
-            return <FooterCTASection key={index} {...block} />;
-
-          default:
-            return null;
-        }
-      })}
     </main>
   );
 };

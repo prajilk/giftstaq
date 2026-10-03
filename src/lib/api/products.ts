@@ -3,16 +3,18 @@ import { ProductByHandleResponse, ProductsResponse } from "@/lib/shopify/types";
 export async function fetchProductsFromApi(
   first = 12,
   after?: string,
+  sortKey = "CREATED_AT",
+  reverse = true,
 ): Promise<ProductsResponse> {
-  const params = new URLSearchParams({ first: String(first) });
+  const params = new URLSearchParams({
+    first: String(first),
+    sortKey,
+    reverse: String(reverse),
+  });
   if (after) params.set("after", after);
 
   const res = await fetch(`/api/products?${params.toString()}`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
+  if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }
 
