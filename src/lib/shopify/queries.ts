@@ -61,6 +61,17 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
       handle
       title
       description
+      descriptionHtml
+      images(first: 50) {
+        edges {
+          node {
+            url
+            altText
+            width
+            height
+          }
+        }
+      }
       priceRange {
         minVariantPrice {
           amount
@@ -82,6 +93,12 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
               name
               value
             }
+            image {
+              url
+              altText
+              width
+              height
+            }
             price {
               amount
               currencyCode
@@ -97,43 +114,12 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
           }
         }
       }
-      colorGalleries: metafield(namespace: "custom", key: "color_galleries") {
-        references(first: 20) {
-          edges {
-            node {
-              ... on Metaobject {
-                colorName: field(key: "color_name") {
-                  value
-                }
-                images: field(key: "images") {
-                  references(first: 20) {
-                    edges {
-                      node {
-                        ... on MediaImage {
-                          image {
-                            url
-                            altText
-                            width
-                            height
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
       metafields(
         identifiers: [
           { namespace: "custom", key: "material" }
-          { namespace: "custom", key: "care_instructions" }
           { namespace: "custom", key: "sleeve" }
           { namespace: "custom", key: "collar" }
           { namespace: "custom", key: "fit" }
-          { namespace: "custom", key: "branding_method" }
           { namespace: "custom", key: "ideal_for" }
           { namespace: "custom", key: "key_features" }
         ]

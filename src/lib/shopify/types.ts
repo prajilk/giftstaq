@@ -89,25 +89,8 @@ export interface ShopifyVariant {
   id: string;
   availableForSale: boolean;
   selectedOptions: { name: string; value: string }[];
+  image: ShopifyImage | null;
   price: ShopifyMoney;
-}
-
-export interface ShopifyMetaobjectImage {
-  image: {
-    url: string;
-    altText: string | null;
-    width: number;
-    height: number;
-  } | null;
-}
-
-export interface ShopifyColorGallery {
-  colorName: { value: string } | null;
-  images: {
-    references: {
-      edges: { node: ShopifyMetaobjectImage }[];
-    } | null;
-  } | null;
 }
 
 export interface ShopifyProductDetail {
@@ -115,15 +98,12 @@ export interface ShopifyProductDetail {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml: string;
+  images: { edges: { node: ShopifyImage }[] };
   priceRange: { minVariantPrice: ShopifyMoney };
   options: ShopifyOption[];
   variants: { edges: { node: ShopifyVariant }[] };
   collections: { edges: { node: ShopifyCollection }[] };
-  colorGalleries: {
-    references: {
-      edges: { node: ShopifyColorGallery }[];
-    } | null;
-  } | null;
   metafields: (ShopifyMetafield | null)[];
 }
 

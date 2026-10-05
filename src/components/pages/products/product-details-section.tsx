@@ -35,6 +35,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { cartKeys } from "@/lib/query/keys";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 const ProductDetailsSection = ({ handle }: { handle: string }) => {
   const { data, isLoading, isError } = useProduct(handle);
@@ -376,7 +377,12 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
                 Benefits
               </AccordionTrigger>
               <AccordionContent className="text-base" panelStyle="ps-0">
-                {product.description}
+                <div
+                  className="prose prose-sm max-w-none mt-4 text-gray-600"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(product.descriptionHtml),
+                  }}
+                />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -419,7 +425,7 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
 
                   {/* Rows */}
                   <div className="border border-[#717680] rounded-b-xl">
-                    {product.specs.map((row, index) => (
+                    {product.specs?.map((row, index) => (
                       <div
                         key={row.label}
                         className={`grid grid-cols-2 items-center ${
