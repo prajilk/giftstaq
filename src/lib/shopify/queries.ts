@@ -122,6 +122,8 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
           { namespace: "custom", key: "fit" }
           { namespace: "custom", key: "ideal_for" }
           { namespace: "custom", key: "key_features" }
+          { namespace: "custom", key: "branding_method" }
+          { namespace: "custom", key: "product_info" }
         ]
       ) {
         namespace

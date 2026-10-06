@@ -3,35 +3,21 @@
 import { Loader2, SearchIcon, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useProductSearch } from "@/hooks/useProductSearch";
 import Link from "next/link";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 const Search = () => {
   const [term, setTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { data, isLoading, isFetching } = useProductSearch(term);
+  const ref = useRef(null);
+  useClickOutside(ref, () => setIsOpen(false));
 
   const results = data?.products.edges.map((e) => e.node) ?? [];
   const showDropdown = isOpen && term.trim().length > 1;
   return (
-    // <div className="flex items-center">
-    //   <Input
-    //     value={term}
-    //     onChange={(e) => setTerm(e.target.value)}
-    //     onFocus={() => setIsOpen(true)}
-    //     onBlur={() => setTimeout(() => setIsOpen(false), 150)} // delay so link clicks register first
-    //     className="bg-white placeholder:text-[#717680] hidden lg:block"
-    //     placeholder="Search"
-    //   />
-    //   <Button
-    //     size="icon"
-    //     variant="secondary"
-    //     className="bg-white cursor-pointer shadow lg:shadow-none"
-    //   >
-    //     <SearchIcon />
-    //   </Button>
-    // </div>
     <div className="relative w-full max-w-md">
       <div className="relative flex">
         {/* <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /> */}
@@ -40,7 +26,6 @@ const Search = () => {
           value={term}
           onChange={(e) => setTerm(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          onBlur={() => setTimeout(() => setIsOpen(false), 150)} // delay so link clicks register first
           placeholder="Search products..."
           className="bg-white placeholder:text-[#717680] hidden lg:block"
         />
@@ -62,7 +47,10 @@ const Search = () => {
       </div>
 
       {showDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
+        <div
+          ref={ref}
+          className="absolute top-full left-0 right-0 mt-2 bg-white border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"
+        >
           {isLoading && (
             <p className="p-4 text-sm text-gray-500">Searching...</p>
           )}

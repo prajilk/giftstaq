@@ -5,9 +5,15 @@ import { useProductRecommendations } from "@/hooks/useProductRecommendations";
 import { toProductCard } from "@/lib/shopify/transform";
 
 const RelatedProductsSection = ({ productId }: { productId: string }) => {
+  console.log(productId);
+
   const { data, isLoading } = useProductRecommendations(productId);
 
+  console.log(data);
+
   const products = (data?.productRecommendations ?? []).map(toProductCard);
+
+  console.log(products);
 
   if (isLoading) return null; // avoid layout jump / spinner for a below-the-fold section
   if (products.length === 0) return null; // some products just won't have recommendations — hide the section entirely

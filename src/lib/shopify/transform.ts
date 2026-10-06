@@ -72,7 +72,7 @@ export interface ProductDetailData {
 }
 
 // Fields shown as their own callout sections, not in the generic table
-const FEATURED_KEYS = new Set(["key_features", "ideal_for"]);
+const FEATURED_KEYS = new Set(["key_features", "ideal_for", "product_info"]);
 
 // Human-friendly labels for the generic table
 const LABELS: Record<string, string> = {
@@ -208,9 +208,19 @@ function getFilenameSlug(url: string): string {
   return file.replace(/\.[^/.]+$/, "");
 }
 
+/**
+ * Takes everything after the first underscore as the "color portion" —
+ * doesn't care what's before it (handle, typo, anything), since the
+ * image is already guaranteed to belong to this product via the query itself.
+ */
 function imageMatchesColor(imageUrl: string, colorSlug: string): boolean {
   const fileSlug = getFilenameSlug(imageUrl);
-  return fileSlug === colorSlug || fileSlug.startsWith(`${colorSlug}-`);
+  const underscoreIndex = fileSlug.indexOf("_");
+
+  if (underscoreIndex === -1) return false; // no underscore = doesn't follow the convention at all
+
+  const colorPortion = fileSlug.slice(underscoreIndex + 1); // "navy-blue" or "navy-blue-back"
+  return colorPortion === colorSlug || colorPortion.startsWith(`${colorSlug}-`);
 }
 
 function parseMetafieldAsList(mf: ShopifyMetafield): string[] {
@@ -321,6 +331,9 @@ export function toProductDetail(
           })()
         : mf.value,
     }));
+
+  console.log(specs);
+  console.log(metafields);
 
   return {
     id: product.id,

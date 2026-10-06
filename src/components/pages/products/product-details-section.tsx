@@ -387,85 +387,100 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
             </AccordionItem>
           </Accordion>
 
-          <hr />
+          {product.keyFeatures && product.keyFeatures.length > 0 && (
+            <>
+              <hr />
+              <Accordion defaultValue={["features"]}>
+                <AccordionItem value="features" className="bg-transparent my-0">
+                  <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
+                    Key Features
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base" panelStyle="ps-1">
+                    <ul className="list-disc list-inside">
+                      {product.keyFeatures?.map((f, i) => (
+                        <li key={f + i}>{f}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </>
+          )}
 
-          <Accordion defaultValue={["features"]}>
-            <AccordionItem value="features" className="bg-transparent my-0">
-              <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
-                Key Features
-              </AccordionTrigger>
-              <AccordionContent className="text-base" panelStyle="ps-1">
-                <ul className="list-disc list-inside">
-                  {product.keyFeatures?.map((f, i) => (
-                    <li key={f + i}>{f}</li>
-                  ))}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          <hr />
-
-          <Accordion defaultValue={["specs"]}>
-            <AccordionItem value="specs" className="bg-transparent my-0">
-              <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
-                Technical Specifications
-              </AccordionTrigger>
-              <AccordionContent className="text-base" panelStyle="ps-0 pt-2">
-                <div className="mx-auto w-full overflow-hidden rounded-t-xl">
-                  {/* Header */}
-                  <div className="grid grid-cols-2 bg-primary">
-                    <div className="px-6 py-3 text-sm font-medium uppercase tracking-wide text-white">
-                      Specification
-                    </div>
-                    <div className="px-6 py-3 text-sm font-medium uppercase tracking-wide text-white">
-                      Details
-                    </div>
-                  </div>
-
-                  {/* Rows */}
-                  <div className="border border-[#717680] rounded-b-xl">
-                    {product.specs?.map((row, index) => (
-                      <div
-                        key={row.label}
-                        className={`grid grid-cols-2 items-center ${
-                          index !== product.specs.length - 1
-                            ? "border-b border-[#717680]"
-                            : ""
-                        }`}
-                      >
-                        <div className="px-6 py-3 text-sm font-medium uppercase text-[#717680]">
-                          {row.label}
+          {product.specs && product.specs.length > 0 && (
+            <>
+              <hr />
+              <Accordion defaultValue={["specs"]}>
+                <AccordionItem value="specs" className="bg-transparent my-0">
+                  <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
+                    Technical Specifications
+                  </AccordionTrigger>
+                  <AccordionContent
+                    className="text-base"
+                    panelStyle="ps-0 pt-2"
+                  >
+                    <div className="mx-auto w-full overflow-hidden rounded-t-xl">
+                      {/* Header */}
+                      <div className="grid grid-cols-2 bg-primary">
+                        <div className="px-6 py-3 text-sm font-medium uppercase tracking-wide text-white">
+                          Specification
                         </div>
-                        <div className="border-l border-[#717680] px-6 py-3 text-sm font-medium uppercase">
-                          {Array.isArray(row.value)
-                            ? row.value.join(", ")
-                            : row.value}
+                        <div className="px-6 py-3 text-sm font-medium uppercase tracking-wide text-white">
+                          Details
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
 
-          <hr />
+                      {/* Rows */}
+                      <div className="border border-[#717680] rounded-b-xl">
+                        {product.specs?.map((row, index) => (
+                          <div
+                            key={row.label}
+                            className={`grid grid-cols-2 items-center ${
+                              index !== product.specs.length - 1
+                                ? "border-b border-[#717680]"
+                                : ""
+                            }`}
+                          >
+                            <div className="px-6 py-3 text-sm font-medium uppercase text-[#717680]">
+                              {row.label}
+                            </div>
+                            <div className="border-l border-[#717680] px-6 py-3 text-sm font-medium uppercase">
+                              {Array.isArray(row.value)
+                                ? row.value.join(", ")
+                                : row.value}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </>
+          )}
 
-          <Accordion defaultValue={["ideal-for"]}>
-            <AccordionItem value="ideal-for" className="bg-transparent my-0">
-              <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
-                Ideal For
-              </AccordionTrigger>
-              <AccordionContent className="text-base" panelStyle="ps-1">
-                <ul className="list-disc list-inside">
-                  {product.idealFor?.map((ideal, i) => (
-                    <li key={i + ideal}>{ideal}</li>
-                  ))}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {product.idealFor && product.idealFor.length > 0 && (
+            <>
+              <hr />
+              <Accordion defaultValue={["ideal-for"]}>
+                <AccordionItem
+                  value="ideal-for"
+                  className="bg-transparent my-0"
+                >
+                  <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
+                    Ideal For
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base" panelStyle="ps-1">
+                    <ul className="list-disc list-inside">
+                      {product.idealFor?.map((ideal, i) => (
+                        <li key={i + ideal}>{ideal}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </>
+          )}
           {/* Here */}
         </div>
       </div>
