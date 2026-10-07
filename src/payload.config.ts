@@ -15,18 +15,27 @@ import { ProductListingPage } from "./globals/ProductListingPage";
 import { ProductPage } from "./globals/ProductPage";
 import { ContactSubmissions } from "./collections/ContactSubmissions";
 import { EmailSubscribeSubmissions } from "./collections/EmailSubscribeSubmissions";
+import { LegalPages } from "./collections/LegalPages";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
+  editor: lexicalEditor(),
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, ContactSubmissions, EmailSubscribeSubmissions],
+  collections: [
+    Users,
+    Media,
+    ContactSubmissions,
+    EmailSubscribeSubmissions,
+    LegalPages,
+  ],
   globals: [
     Homepage,
     Header,

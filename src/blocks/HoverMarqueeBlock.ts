@@ -25,6 +25,11 @@ export const HoverMarqueeBlock: Block = {
           required: true,
         },
         {
+          name: "link",
+          type: "text",
+          required: true,
+        },
+        {
           name: "images",
           type: "upload",
           required: true,

@@ -8,6 +8,7 @@ import type { HoverMarqueeBlock } from "@/payload-types";
 import Image from "next/image";
 import { isImage } from "payload/shared";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
   const [active, setActive] = useState<number | null>(null);
@@ -68,27 +69,26 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
             >
               <Marquee className="[--duration:20s] text-black">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="flex shrink-0 items-center gap-8 px-4"
-                  >
-                    <span className="text-7xl uppercase font-anton">
-                      {item.label}
-                    </span>
+                  <Link href="/" key={i} className="shrink-0">
+                    <div className="flex items-center gap-8 px-4">
+                      <span className="text-7xl uppercase font-anton">
+                        {item.label}
+                      </span>
 
-                    {typeof item.images[i] !== "string" &&
-                      item.images[i].mimeType &&
-                      isImage(item.images[i].mimeType) &&
-                      item.images[i].url && (
-                        <Image
-                          src={item.images[i].url}
-                          alt="Image"
-                          width={100}
-                          height={70}
-                          className="w-28 h-full aspect-video shrink-0 object-cover rounded-md"
-                        />
-                      )}
-                  </div>
+                      {typeof item.images[i] !== "string" &&
+                        item.images[i].mimeType &&
+                        isImage(item.images[i].mimeType) &&
+                        item.images[i].url && (
+                          <Image
+                            src={item.images[i].url}
+                            alt="Image"
+                            width={100}
+                            height={70}
+                            className="w-28 h-full aspect-video shrink-0 object-cover rounded-md"
+                          />
+                        )}
+                    </div>
+                  </Link>
                 ))}
               </Marquee>
             </div>

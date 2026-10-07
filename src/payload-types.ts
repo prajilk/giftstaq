@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     'contact-submissions': ContactSubmission;
     'email-subscribe-submissions': EmailSubscribeSubmission;
+    'legal-pages': LegalPage;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'email-subscribe-submissions': EmailSubscribeSubmissionsSelect<false> | EmailSubscribeSubmissionsSelect<true>;
+    'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -208,6 +210,35 @@ export interface EmailSubscribeSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages".
+ */
+export interface LegalPage {
+  id: string;
+  title: string;
+  /**
+   * e.g. "privacy-policy" — used in the URL
+   */
+  slug: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -245,6 +276,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'email-subscribe-submissions';
         value: string | EmailSubscribeSubmission;
+      } | null)
+    | ({
+        relationTo: 'legal-pages';
+        value: string | LegalPage;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -350,6 +385,17 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
  */
 export interface EmailSubscribeSubmissionsSelect<T extends boolean = true> {
   email?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages_select".
+ */
+export interface LegalPagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -494,6 +540,7 @@ export interface HoverMarqueeBlock {
   heading: string;
   rows: {
     label: string;
+    link: string;
     images: (string | Media)[];
     id?: string | null;
   }[];
@@ -868,6 +915,7 @@ export interface HoverMarqueeBlockSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        link?: T;
         images?: T;
         id?: T;
       };
