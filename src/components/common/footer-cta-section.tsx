@@ -35,7 +35,7 @@ const FooterCTASection = ({
           logo.url && (
             <Image src={logo.url} alt={logo.alt} width={80} height={80} />
           )}
-        <h1 className="text-3xl font-anton uppercase max-w-sm">{heading}</h1>
+        <h1 className="text-2xl font-anton uppercase max-w-sm">{heading}</h1>
         <p className="max-w-md text-sm">{description}</p>
         <Link href={link.href} target={link.isExternal ? "_blank" : "_self"}>
           <Button className="bg-white text-black hover:bg-black hover:text-white w-fit mt-5 lg:mt-0">

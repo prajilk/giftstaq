@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowRight, Check, RotateCcw, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Field, FieldGroup } from "../ui/field";
 import { Label } from "../ui/label";
@@ -12,21 +11,39 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { Slider } from "../ui/slider";
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "../ui/input-group";
-// import { useFilters } from "@/context/filter-context";
+  ALLOWED_SUSTAINABILITY,
+  PRICE_MAX,
+  PRICE_MIN,
+  ProductFilters,
+} from "@/lib/shopify/filters";
+import { useState } from "react";
 
-// type FilterContentProps = {
-//   crane_types: CraneTypeProps[];
-//   project_types: ProjectTypeProps[];
-//   manufacturers: ManufacturerProps[];
-// };
+type FilterContentProps = {
+  filters: ProductFilters;
+  onChange: (filters: ProductFilters) => void;
+};
 
-const FilterContent = () => {
-  //   const { draftFilters, toggleFilter, selectAvailability, setSortBy, resetFilters, applyFilters } = useFilters();
+const FilterContent = ({ filters, onChange }: FilterContentProps) => {
+  const [draftPrice, setDraftPrice] = useState<[number, number]>([
+    filters.price?.min ?? PRICE_MIN,
+    filters.price?.max ?? PRICE_MAX,
+  ]);
+
+  const toggleSustainability = (option: string) =>
+    onChange({
+      ...filters,
+      sustainability: filters.sustainability.includes(option)
+        ? filters.sustainability.filter((v) => v !== option)
+        : [...filters.sustainability, option],
+    });
+
+  const commitPrice = ([min, max]: [number, number]) =>
+    onChange({
+      ...filters,
+      price: min === PRICE_MIN && max === PRICE_MAX ? null : { min, max }, // full range = no filter
+    });
 
   return (
     <div>
@@ -44,7 +61,7 @@ const FilterContent = () => {
 
         <div className="flex items-center justify-between mt-6">
           <span className="text-lg font-semibold uppercase">Filters</span>
-          <div>
+          {/* <div>
             <Button
               variant="ghost"
               className="text-primary hover:text-primary px-3 h-fit py-2 text-xs"
@@ -58,43 +75,68 @@ const FilterContent = () => {
             >
               Apply <Check size={16} />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
 
       <hr />
 
       <div className="h-screen overflow-y-scroll scrollbar-thin">
+        <Accordion defaultValue={["price"]}>
+          <AccordionItem value="price" className="bg-transparent my-0">
+            <AccordionTrigger
+              className="font-medium uppercase ps-0 pb-2 hover:no-underline"
+              iconStyles="bg-transparent shadow-none text-[#A4A7AE] [&>svg]:size-5"
+            >
+              Price
+            </AccordionTrigger>
+            <AccordionContent panelStyle="ps-1">
+              <div className="max-w-sm px-1 pt-2">
+                <Slider
+                  min={PRICE_MIN}
+                  max={PRICE_MAX}
+                  step={10}
+                  value={draftPrice}
+                  onValueChange={(v) => setDraftPrice(v as [number, number])}
+                  onValueCommitted={(v) => commitPrice(v as [number, number])}
+                />
+                <div className="mt-3 flex justify-between text-sm text-[#414651]">
+                  <span>AED {draftPrice[0]}</span>
+                  <span>AED {draftPrice[1]}</span>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <hr />
+
         <Accordion defaultValue={["shipping"]}>
           <AccordionItem value="shipping" className="bg-transparent my-0">
             <AccordionTrigger
               className="font-medium uppercase ps-0 pb-2 hover:no-underline"
               iconStyles="bg-transparent shadow-none text-[#A4A7AE] [&>svg]:size-5"
             >
-              Order Quantity
+              Sustainability
             </AccordionTrigger>
             <AccordionContent panelStyle="ps-1">
               <FieldGroup className="max-w-sm gap-2">
-                {["All on-Demand", "Buy in Bulk", "Volume Discount"].map(
-                  (data) => (
-                    <Field orientation="horizontal" key={data}>
-                      <Checkbox
-                        id={data}
-                        //   checked={draftFilters.craneTypes.includes(crane_type.slug)}
-                        //   onCheckedChange={() =>
-                        //     toggleFilter("craneTypes", crane_type.slug)
-                        //   }
-                        className="border-[#A4A7AE] rounded-full"
-                      />
-                      <Label
-                        htmlFor={data}
-                        className="text-base font-normal text-[#414651]"
-                      >
-                        {data}
-                      </Label>
-                    </Field>
-                  ),
-                )}
+                {ALLOWED_SUSTAINABILITY.map((data) => (
+                  <Field orientation="horizontal" key={data}>
+                    <Checkbox
+                      id={data}
+                      checked={filters.sustainability.includes(data)}
+                      onCheckedChange={() => toggleSustainability(data)}
+                      className="border-[#A4A7AE] rounded-full"
+                    />
+                    <Label
+                      htmlFor={data}
+                      className="text-base font-normal text-[#414651]"
+                    >
+                      {data}
+                    </Label>
+                  </Field>
+                ))}
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>
@@ -102,7 +144,7 @@ const FilterContent = () => {
 
         <hr />
 
-        <Accordion defaultValue={["test2"]}>
+        {/* <Accordion defaultValue={["test2"]}>
           <AccordionItem value="test2" className="bg-transparent my-0">
             <AccordionTrigger
               className="font-medium uppercase ps-0 pb-2 hover:no-underline"
@@ -137,9 +179,9 @@ const FilterContent = () => {
           </AccordionItem>
         </Accordion>
 
-        <hr />
+        <hr /> */}
 
-        <Accordion defaultValue={["test3"]}>
+        {/* <Accordion defaultValue={["test3"]}>
           <AccordionItem value="test3" className="bg-transparent my-0">
             <AccordionTrigger
               className="font-medium uppercase ps-0 pb-2 hover:no-underline"
@@ -186,9 +228,9 @@ const FilterContent = () => {
           </AccordionItem>
         </Accordion>
 
-        <hr />
+        <hr /> */}
 
-        <Accordion defaultValue={["test4"]}>
+        {/* <Accordion defaultValue={["test4"]}>
           <AccordionItem value="test4" className="bg-transparent my-0">
             <AccordionTrigger
               className="font-medium uppercase ps-0 pb-2 hover:no-underline"
@@ -221,9 +263,9 @@ const FilterContent = () => {
           </AccordionItem>
         </Accordion>
 
-        <hr />
+        <hr /> */}
 
-        <Accordion defaultValue={["test5"]}>
+        {/* <Accordion defaultValue={["test5"]}>
           <AccordionItem value="test5" className="bg-transparent my-0">
             <AccordionTrigger
               className="font-medium uppercase ps-0 pb-2 hover:no-underline"
@@ -254,7 +296,7 @@ const FilterContent = () => {
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
       </div>
     </div>
   );

@@ -7,8 +7,8 @@ const LogoCloudSection = ({ description, heading, logos }: LogoCloudBlock) => {
   return (
     <section className="bg-primary">
       <div className="container container-padding-x py-12 lg:py-16 text-white space-y-4">
-        <h1 className="text-3xl lg:text-4xl font-anton uppercase">{heading}</h1>
-        <p>{description}</p>
+        <h1 className="text-2xl lg:text-4xl font-anton uppercase">{heading}</h1>
+        <p className="text-sm md:text-base">{description}</p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-12">
           {logos.map((item) => {

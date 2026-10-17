@@ -298,7 +298,7 @@ const Footer = ({
               &copy; {new Date().getFullYear()} Giftstaq. All rights reserved.
             </p>
 
-            <div className="flex items-center gap-3 text-xs">
+            <div className="flex items-center gap-3 text-xs flex-wrap">
               {policies.map((p) => (
                 <Link
                   href={p.link.href}

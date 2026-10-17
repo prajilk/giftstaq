@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCollectionByHandle } from "@/lib/shopify/collections";
+import { parseFilters } from "@/lib/shopify/filters";
 
 export async function GET(
   request: NextRequest,
@@ -13,12 +14,14 @@ export async function GET(
   const reverse = searchParams.get("reverse") === "true";
 
   try {
+    const filters = parseFilters(searchParams);
     const data = await getCollectionByHandle(
       handle,
       first,
       after,
       sortKey,
       reverse,
+      filters,
     );
     if (!data.collection) {
       return NextResponse.json(

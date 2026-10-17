@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    colors: Color;
     'contact-submissions': ContactSubmission;
     'email-subscribe-submissions': EmailSubscribeSubmission;
     'legal-pages': LegalPage;
@@ -81,6 +82,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    colors: ColorsSelect<false> | ColorsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'email-subscribe-submissions': EmailSubscribeSubmissionsSelect<false> | EmailSubscribeSubmissionsSelect<true>;
     'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
@@ -185,6 +187,23 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colors".
+ */
+export interface Color {
+  id: string;
+  /**
+   * Must match the color name used in Shopify, e.g. "Midnight Blue"
+   */
+  name: string;
+  /**
+   * e.g. #1A2B3C
+   */
+  hex: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-submissions".
  */
 export interface ContactSubmission {
@@ -268,6 +287,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'colors';
+        value: string | Color;
       } | null)
     | ({
         relationTo: 'contact-submissions';
@@ -364,6 +387,16 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colors_select".
+ */
+export interface ColorsSelect<T extends boolean = true> {
+  name?: T;
+  hex?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

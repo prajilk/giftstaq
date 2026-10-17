@@ -106,11 +106,11 @@ const AboutUsSection = ({
     <section className="bg-[#E2D5C4]">
       <div className="container container-padding-x py-12 lg:py-16">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-5 lg:gap-0">
-          <h1 className="text-3xl lg:text-4xl font-anton uppercase max-w-lg">
+          <h1 className="text-2xl lg:text-4xl font-anton uppercase max-w-lg">
             {heading}
           </h1>
           <div className="space-y-4 lg:space-y-6">
-            <p className="max-w-lg">{description}</p>
+            <p className="max-w-lg text-sm md:text-base">{description}</p>
             <Link
               href={link.href}
               target={link.isExternal ? "_blank" : "_self"}

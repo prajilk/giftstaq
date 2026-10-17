@@ -21,7 +21,7 @@ export function ProductsCarousel({
         align: "start",
         loop: false,
       }}
-      className="w-full mt-12"
+      className="w-full mt-14 md:mt-12"
     >
       <CarouselContent>
         {cards.map((item) => (

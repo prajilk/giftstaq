@@ -42,8 +42,12 @@ function Service({
     <div className="flex items-center gap-2 shrink-0">
       <Image src={img.url} alt="Services" width={50} height={50} />
       <div>
-        <h6 className="text-lg font-semibold leading-7">{title}</h6>
-        <p className="text-[#414651] text-sm leading-5">{description}</p>
+        <h6 className="text-base md:text-lg font-semibold md:leading-7">
+          {title}
+        </h6>
+        <p className="text-[#414651] text-xs md:text-sm md:leading-5">
+          {description}
+        </p>
       </div>
     </div>
   );

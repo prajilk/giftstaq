@@ -1,5 +1,6 @@
 import { CollectionByHandleResponse } from "@/lib/shopify/types";
 import { CollectionsResponse } from "@/lib/shopify/types";
+import { EMPTY_FILTERS, ProductFilters } from "../shopify/filters";
 
 export async function fetchCollectionsFromApi(
   first = 6,
@@ -15,6 +16,7 @@ export async function fetchCollectionFromApi(
   after?: string,
   sortKey = "COLLECTION_DEFAULT",
   reverse = false,
+  filters: ProductFilters = EMPTY_FILTERS,
 ): Promise<CollectionByHandleResponse> {
   const params = new URLSearchParams({
     first: String(first),
@@ -22,6 +24,12 @@ export async function fetchCollectionFromApi(
     reverse: String(reverse),
   });
   if (after) params.set("after", after);
+  if (filters.sustainability.length)
+    params.set("sustainability", filters.sustainability.join(","));
+  if (filters.price) {
+    params.set("minPrice", String(filters.price.min));
+    params.set("maxPrice", String(filters.price.max));
+  }
 
   const res = await fetch(`/api/collections/${handle}?${params.toString()}`);
   if (res.status === 404) throw new Error("COLLECTION_NOT_FOUND");

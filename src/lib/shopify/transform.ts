@@ -1,4 +1,6 @@
+import { ColorMap } from "../payload/colors";
 import { isValidJSON } from "../utils";
+import { getColorHex } from "./colors";
 import {
   ShopifyCollectionDetail,
   ShopifyMetafield,
@@ -41,15 +43,20 @@ export function toProductCard(product: ShopifyProduct): ProductCardData {
   };
 }
 
+export interface SizeData {
+  value: string;
+  available: boolean;
+  variantId: string | null;
+}
+
 export interface ColorVariantData {
   name: string;
+  hex: string | null;
   thumbnail: string | null;
   images: string[];
-  sizes: {
-    value: string;
-    available: boolean;
-    variantId: string | null;
-  }[];
+  sizes: SizeData[];
+  variantId: string | null; // used when the product has colors but no sizes
+  available: boolean;
 }
 
 export interface ProductSpec {
@@ -69,6 +76,9 @@ export interface ProductDetailData {
   specs: ProductSpec[];
   keyFeatures: string[];
   idealFor: string[];
+  images: string[]; // every product image, used when there's no color option
+  sizes: SizeData[]; // used for size-only products
+  defaultVariant: { id: string; available: boolean } | null; // no color and no size
 }
 
 // Fields shown as their own callout sections, not in the generic table
@@ -238,16 +248,52 @@ function parseMetafieldAsList(mf: ShopifyMetafield): string[] {
 
 export function toProductDetail(
   product: ShopifyProductDetail,
+  colorMap: ColorMap,
 ): ProductDetailData {
   const options = product.options ?? [];
-  const variants = (product.variants?.edges ?? []).map((e) => e.node);
   const allImages = (product.images?.edges ?? []).map((e) => e.node);
+
+  const productImages = allImages.map((i) => i.url);
 
   const colorOption = options.find(
     (opt) =>
       opt.name.toLowerCase() === "color" || opt.name.toLowerCase() === "colour",
   );
   const sizeOption = options.find((opt) => opt.name.toLowerCase() === "size");
+
+  const buildSizes = (colorName?: string): SizeData[] =>
+    (sizeOption?.optionValues ?? []).map((sizeValue) => {
+      const match = variants.find(
+        (v) =>
+          (!colorName ||
+            v.selectedOptions.some(
+              (o) => o.name.toLowerCase() === "color" && o.value === colorName,
+            )) &&
+          v.selectedOptions.some(
+            (o) =>
+              o.name.toLowerCase() === "size" && o.value === sizeValue.name,
+          ),
+      );
+      return {
+        value: sizeValue.name,
+        available: match?.availableForSale ?? false,
+        variantId: match?.id ?? null,
+      };
+    });
+
+  const colorValues = new Set(
+    (colorOption?.optionValues ?? []).map((v) => v.name),
+  );
+  const hasColorOption = Boolean(colorOption);
+  const variants = (product.variants?.edges ?? [])
+    .map((e) => e.node)
+    .filter(
+      (v) =>
+        !hasColorOption ||
+        v.selectedOptions.some(
+          (o) => o.name.toLowerCase() === "color" && colorValues.has(o.value),
+        ),
+    );
 
   const colors: ColorVariantData[] = (colorOption?.optionValues ?? []).map(
     (colorValue) => {
@@ -269,31 +315,39 @@ export function toProductDetail(
         .map((v) => v.image?.url)
         .filter((url): url is string => Boolean(url));
 
-      const images = Array.from(new Set([...matchedImages, ...variantImages]));
+      const images =
+        matchedImages.length > 0 || variantImages.length > 0
+          ? Array.from(new Set([...matchedImages, ...variantImages]))
+          : allImages.map((i) => i.url);
 
-      const sizes = (sizeOption?.optionValues ?? []).map((sizeValue) => {
-        const matchingVariant = variants.find(
-          (v) =>
-            v.selectedOptions.some(
-              (o) => o.name.toLowerCase() === "color" && o.value === colorName,
-            ) &&
-            v.selectedOptions.some(
-              (o) =>
-                o.name.toLowerCase() === "size" && o.value === sizeValue.name,
-            ),
-        );
-        return {
-          value: sizeValue.name,
-          available: matchingVariant?.availableForSale ?? false,
-          variantId: matchingVariant?.id ?? null,
-        };
-      });
+      // const sizes = (sizeOption?.optionValues ?? []).map((sizeValue) => {
+      //   const matchingVariant = variants.find(
+      //     (v) =>
+      //       v.selectedOptions.some(
+      //         (o) => o.name.toLowerCase() === "color" && o.value === colorName,
+      //       ) &&
+      //       v.selectedOptions.some(
+      //         (o) =>
+      //           o.name.toLowerCase() === "size" && o.value === sizeValue.name,
+      //       ),
+      //   );
+      //   return {
+      //     value: sizeValue.name,
+      //     available: matchingVariant?.availableForSale ?? false,
+      //     variantId: matchingVariant?.id ?? null,
+      //   };
+      // });
+
+      const firstVariant = variantsForColor[0];
 
       return {
         name: colorName,
-        thumbnail: variantImages[0] ?? matchedImages[0] ?? null,
-        images: images.length > 0 ? images : allImages.map((i) => i.url),
-        sizes,
+        hex: getColorHex(colorName, colorMap),
+        thumbnail: images[0] ?? null,
+        images,
+        sizes: buildSizes(colorName),
+        variantId: sizeOption ? null : (firstVariant?.id ?? null),
+        available: firstVariant?.availableForSale ?? false,
       };
     },
   );
@@ -332,9 +386,6 @@ export function toProductDetail(
         : mf.value,
     }));
 
-  console.log(specs);
-  console.log(metafields);
-
   return {
     id: product.id,
     title: product.title,
@@ -347,5 +398,11 @@ export function toProductDetail(
     keyFeatures,
     idealFor,
     specs,
+    images: productImages,
+    sizes: colorOption ? [] : buildSizes(),
+    defaultVariant:
+      !colorOption && !sizeOption && variants[0]
+        ? { id: variants[0].id, available: variants[0].availableForSale }
+        : null,
   };
 }

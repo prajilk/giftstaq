@@ -2,10 +2,12 @@ import { useCollectionProducts } from "./useCollectionProducts";
 import { toProductCard } from "@/lib/shopify/transform";
 import { SortValue } from "@/lib/shopify/sort";
 import { ProductsListResult } from "@/lib/shopify/types";
+import { ProductFilters } from "@/lib/shopify/filters";
 
 export function useCollectionProductsList(
   handle: string,
   sort: SortValue,
+  filters: ProductFilters,
 ): ProductsListResult {
   const {
     data,
@@ -15,7 +17,7 @@ export function useCollectionProductsList(
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useCollectionProducts(handle, sort);
+  } = useCollectionProducts(handle, sort, filters);
 
   const products = (data?.pages ?? []).flatMap((page) =>
     (page.collection?.products.edges ?? []).map(({ node }) =>

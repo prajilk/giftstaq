@@ -9,6 +9,8 @@ import { Providers } from "@/providers/query-provider";
 import { Toaster } from "sonner";
 import { getPayload } from "payload";
 import payloadConfig from "@/payload.config";
+import { ColorsProvider } from "@/providers/colors-provider";
+import { getColorMap } from "@/lib/payload/colors";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -24,7 +26,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const payload = await getPayload({ config: payloadConfig });
+  const [colorMap, payload] = await Promise.all([
+    getColorMap(),
+    getPayload({ config: payloadConfig }),
+  ]);
 
   const [header, footer] = await Promise.all([
     payload.findGlobal({
@@ -48,11 +53,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <TooltipProvider>
-            <Header {...header} />
-            <main className="flex-1">{children}</main>
-            <Footer {...footer} />
-          </TooltipProvider>
+          <ColorsProvider value={colorMap}>
+            <TooltipProvider>
+              <Header {...header} />
+              <main className="flex-1">{children}</main>
+              <Footer {...footer} />
+            </TooltipProvider>
+          </ColorsProvider>
         </Providers>
         <Toaster position="top-right" />
       </body>

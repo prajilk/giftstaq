@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   Tooltip,
@@ -6,6 +8,8 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { ProductCardData } from "@/lib/shopify/transform";
+import { getColorHex } from "@/lib/shopify/colors";
+import { useColorMap } from "@/providers/colors-provider";
 
 function ProductCard({
   title,
@@ -15,7 +19,8 @@ function ProductCard({
   colors,
   handle,
 }: ProductCardData) {
-  if (!title || !image || !price || !collectionName || !handle) return null;
+  if (!title || !image || !price || !handle) return null;
+  const colorMap = useColorMap();
 
   return (
     <div className="shrink-0 h-fit">
@@ -35,7 +40,9 @@ function ProductCard({
                 <li
                   className="size-4 shrink-0 rounded-full"
                   key={color}
-                  style={{ backgroundColor: color.toLowerCase() }}
+                  style={{
+                    backgroundColor: getColorHex(color, colorMap) ?? "#E5E7EB",
+                  }}
                 />
               ))}
               {colors.length > 4 && (
@@ -48,7 +55,7 @@ function ProductCard({
         </div>
 
         <span className="text-[10px] uppercase text-[#414651] block mt-5">
-          {collectionName}
+          {collectionName || "--"}
         </span>
         <Tooltip>
           <TooltipTrigger className="text-sm font-medium mt-1 mb-2 [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden text-left">

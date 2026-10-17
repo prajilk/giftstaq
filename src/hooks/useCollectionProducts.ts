@@ -2,19 +2,28 @@ import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchCollectionFromApi } from "@/lib/api/collections";
 import { collectionProductKeys } from "@/lib/query/keys";
 import { COLLECTION_SORT_MAP, SortValue } from "@/lib/shopify/sort";
+import { EMPTY_FILTERS, ProductFilters } from "@/lib/shopify/filters";
 
 const PAGE_SIZE = 12;
 
 export function useCollectionProducts(
   handle: string,
   sort: SortValue = "latest",
+  filters: ProductFilters = EMPTY_FILTERS,
 ) {
   const { sortKey, reverse } = COLLECTION_SORT_MAP[sort]; // reuse same map, or make a collection-specific one if sort keys differ
 
   return useInfiniteQuery({
-    queryKey: collectionProductKeys.list(handle, PAGE_SIZE, sort),
+    queryKey: collectionProductKeys.list(handle, PAGE_SIZE, sort, filters),
     queryFn: ({ pageParam }) =>
-      fetchCollectionFromApi(handle, PAGE_SIZE, pageParam, sortKey, reverse),
+      fetchCollectionFromApi(
+        handle,
+        PAGE_SIZE,
+        pageParam,
+        sortKey,
+        reverse,
+        filters,
+      ),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) =>
       lastPage.collection?.products.pageInfo.hasNextPage

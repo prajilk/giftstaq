@@ -17,6 +17,7 @@ import { ContactSubmissions } from "./collections/ContactSubmissions";
 import { EmailSubscribeSubmissions } from "./collections/EmailSubscribeSubmissions";
 import { LegalPages } from "./collections/LegalPages";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { Colors } from "./collections/Colors";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -32,6 +33,7 @@ export default buildConfig({
   collections: [
     Users,
     Media,
+    Colors,
     ContactSubmissions,
     EmailSubscribeSubmissions,
     LegalPages,

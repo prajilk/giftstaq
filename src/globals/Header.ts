@@ -57,7 +57,7 @@ export const Header: GlobalConfig = {
                 {
                   name: "products",
                   type: "array",
-                  maxRows: 5,
+                  maxRows: 10,
                   labels: { singular: "Product", plural: "Products" },
                   fields: [
                     {

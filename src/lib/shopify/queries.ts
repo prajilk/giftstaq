@@ -84,7 +84,7 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
           name
         }
       }
-      variants(first: 100) {
+      variants(first: 250) {
         edges {
           node {
             id
@@ -426,6 +426,7 @@ export const GET_COLLECTION_BY_HANDLE_QUERY = gql`
     $after: String
     $sortKey: ProductCollectionSortKeys
     $reverse: Boolean
+    $filters: [ProductFilter!] # NEW
   ) {
     collection(handle: $handle) {
       id
@@ -459,6 +460,7 @@ export const GET_COLLECTION_BY_HANDLE_QUERY = gql`
         after: $after
         sortKey: $sortKey
         reverse: $reverse
+        filters: $filters # NEW: filters: $filters
       ) {
         edges {
           node {

@@ -68,17 +68,17 @@ export function NavMenu({ navLinks }: { navLinks: Header["navItems"] }) {
                   <Link href={link.href}>{link.label}</Link>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="flex justify-evenly w-fit gap-2 max-w-full p-3">
+                  <ul className="flex justify-evenly w-fit gap-2 max-w-full p-3 overflow-x-scroll scrollbar-thin">
                     {link.groups?.map((component, i) => (
                       <li
                         key={`${component.collectionName} ${i}`}
-                        className="flex-1 min-w-0"
+                        className="flex-1 min-w-40"
                       >
                         <Link href={component.href} className="font-semibold">
                           {component.collectionName}
                         </Link>
                         <ul className="mt-3 space-y-2 text-sm opacity-90">
-                          {component.products?.map((p, i) => (
+                          {component.products?.map((p) => (
                             <li key={p.product}>
                               <Link href={p.href} className="hover:underline">
                                 {p.product}

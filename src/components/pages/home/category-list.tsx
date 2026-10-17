@@ -23,7 +23,7 @@ const CategoryList = ({
   return (
     <div
       className={cn(
-        "flex items-center justify-evenly overflow-x-scroll scrollbar-thin lg:scrollbar-none gap-5 lg:gap-0",
+        "flex items-center justify-evenly overflow-x-scroll scrollbar-thin lg:scrollbar-none gap-5 lg:gap-0 pb-3",
         className,
       )}
     >
@@ -52,19 +52,20 @@ function CategoryItem({
 }) {
   return (
     <Link href={href} className="shrink-0 flex flex-col items-center gap-5">
-      <div className="group bg-secondary rounded-full size-44 flex items-center justify-center overflow-hidden shrink-0">
+      <div className="relative group bg-secondary rounded-full size-22 md:size-44 flex items-center justify-center overflow-hidden shrink-0">
         {image && (
           <Image
             src={image.url}
             alt={image.altText || "Category"}
-            width={110}
-            height={110}
+            // width={110}
+            // height={110}
+            fill
             className="object-cover group-hover:scale-110 transition-transform duration-300"
             loading="eager"
           />
         )}
       </div>
-      <span className="uppercase font-medium text-sm">{title}</span>
+      <span className="uppercase font-medium text-xs md:text-sm">{title}</span>
     </Link>
   );
 }

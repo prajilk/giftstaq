@@ -10,17 +10,28 @@ import { useState } from "react";
 import { SortValue } from "@/lib/shopify/sort";
 import { ProductsListResult } from "@/lib/shopify/types";
 import { useProductsList } from "@/hooks/useProductsList";
+import { useCollectionProductsList } from "@/hooks/useCollectionProductsList";
+import { ALL_PRODUCTS_HANDLE } from "@/lib/shopify/constants";
+import { EMPTY_FILTERS, ProductFilters } from "@/lib/shopify/filters";
+
+// the filter needs a collection, so /products reads the "all" collection
+const useAllProducts = (sort: SortValue, filters: ProductFilters) =>
+  useCollectionProductsList(ALL_PRODUCTS_HANDLE, sort, filters);
 
 interface ProductsListingSectionProps {
   title: string;
-  useProductsHook?: (sort: SortValue) => ProductsListResult;
+  useProductsHook?: (
+    sort: SortValue,
+    filters: ProductFilters,
+  ) => ProductsListResult;
 }
 
 const ProductsListingSection = ({
   title,
-  useProductsHook = useProductsList,
+  useProductsHook = useAllProducts,
 }: ProductsListingSectionProps) => {
   const [sort, setSort] = useState<SortValue>("latest");
+  const [filters, setFilters] = useState<ProductFilters>(EMPTY_FILTERS); // replaces the sustainability state
 
   const {
     products,
@@ -30,7 +41,7 @@ const ProductsListingSection = ({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useProductsHook(sort);
+  } = useProductsHook(sort, filters);
 
   return (
     <section className="container container-padding-x pb-12 pt-7 md:pb-16 md:pt-12">
@@ -44,7 +55,7 @@ const ProductsListingSection = ({
 
         {/* Desktop */}
         <div className="hidden md:block">
-          <FilterContent />
+          <FilterContent filters={filters} onChange={setFilters} />
         </div>
 
         <div className="md:col-span-3">

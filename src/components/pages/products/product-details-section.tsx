@@ -1,7 +1,6 @@
 "use client";
 
 import { addToCartAction, createCartAction } from "@/actions";
-import { PRODUCT } from "./product-data";
 import Whatsapp from "@/components/icons/whatsapp";
 import {
   Accordion,
@@ -36,6 +35,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { cartKeys } from "@/lib/query/keys";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { useColorMap } from "@/providers/colors-provider";
 
 const ProductDetailsSection = ({ handle }: { handle: string }) => {
   const { data, isLoading, isError } = useProduct(handle);
@@ -69,14 +69,14 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
     },
   });
 
-  function handleAddToCart() {
-    if (selectedSizeData?.variantId) {
-      addToCart.mutate({
-        variantId: selectedSizeData.variantId,
-        qty: quantity,
-      });
-    }
-  }
+  // function handleAddToCart() {
+  //   if (selectedSizeData?.variantId) {
+  //     addToCart.mutate({
+  //       variantId: selectedSizeData.variantId,
+  //       qty: quantity,
+  //     });
+  //   }
+  // }
 
   const buyNow = useMutation({
     mutationFn: ({
@@ -94,22 +94,44 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
   if (isLoading) return <div>Loading product...</div>;
   if (isError || !data?.product) return <div>Something went wrong.</div>;
 
-  const product = toProductDetail(data.product);
+  const colorMap = useColorMap();
+  const product = toProductDetail(data.product, colorMap);
   const hasColors = product.colors.length > 0;
   const activeColor = hasColors ? product.colors[selectedColorIndex] : null;
-  const galleryImages = activeColor?.images ?? [];
+  const galleryImages = activeColor?.images.length
+    ? activeColor.images
+    : product.images;
+  const sizes = activeColor ? activeColor.sizes : product.sizes;
+  const selectedSizeData = sizes.find((s) => s.value === selectedSize);
 
-  const selectedSizeData = activeColor?.sizes.find(
-    (s) => s.value === selectedSize,
-  );
-  const canBuy = activeColor
-    ? Boolean(selectedSizeData?.available && selectedSizeData.variantId)
-    : false; // adjust this if a product has no color/size options at all — see note below
+  // const selectedSizeData = activeColor?.sizes.find(
+  //   (s) => s.value === selectedSize,
+  // );
 
-  function handleBuyNow() {
-    if (selectedSizeData?.variantId) {
-      buyNow.mutate({ variantId: selectedSizeData.variantId, quantity });
-    }
+  let purchasableVariantId: string | null = null;
+
+  if (sizes.length > 0) {
+    purchasableVariantId = selectedSizeData?.available
+      ? selectedSizeData.variantId
+      : null;
+  } else if (activeColor) {
+    purchasableVariantId = activeColor.available ? activeColor.variantId : null;
+  } else if (product.defaultVariant?.available) {
+    purchasableVariantId = product.defaultVariant.id;
+  }
+
+  const canBuy = Boolean(purchasableVariantId);
+
+  // const canBuy = activeColor
+  //   ? Boolean(selectedSizeData?.available && selectedSizeData.variantId)
+  //   : false; // adjust this if a product has no color/size options at all — see note below
+
+  // function handleBuyNow() {
+  //   if (purchasableVariantId) buyNow.mutate({ variantId: purchasableVariantId });
+  // }
+  function handleAddToCart() {
+    if (purchasableVariantId)
+      addToCart.mutate({ variantId: purchasableVariantId, qty: quantity });
   }
 
   function handleColorSelect(index: number) {
@@ -124,11 +146,10 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
     setActiveImage(index);
   }
 
-  function adjustQuantity(delta: number) {
-    setQuantity((qty) =>
-      Math.min(PRODUCT.maxQuantity, Math.max(PRODUCT.minQuantity, qty + delta)),
-    );
-  }
+  const safeIndex = Math.min(
+    activeImage,
+    Math.max(galleryImages.length - 1, 0),
+  );
 
   return (
     <section className="container container-padding-x pb-12 lg:pb-16">
@@ -148,7 +169,7 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
               <Thumbnail
                 key={index}
                 image={image}
-                active={index === activeImage}
+                active={index === safeIndex}
                 onClick={() => goToPose(index)}
               />
             ))}
@@ -242,29 +263,56 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
                   //     style={{ backgroundColor: color.hex }}
                   //   />
                   // </button>
+                  // <button
+                  //   key={color.name}
+                  //   type="button"
+                  //   aria-label={color.name}
+                  //   onClick={() => handleColorSelect(i)}
+                  //   className={cn(
+                  //     "aspect-square w-24 rounded-full border-2 bg-secondary p-1.5 transition flex items-center justify-center overflow-hidden",
+                  //     i === selectedColorIndex
+                  //       ? "border-primary"
+                  //       : "border-transparent hover:border-neutral-300",
+                  //   )}
+                  // >
+                  //   {color.thumbnail ? (
+                  //     <Image
+                  //       src={color.thumbnail}
+                  //       alt={color.name}
+                  //       width={200}
+                  //       height={200}
+                  //       className="size-[90%] object-cover"
+                  //     />
+                  //   ) : (
+                  //     <span className="w-full h-full block bg-gray-200" />
+                  //   )}
+                  // </button>
                   <button
                     key={color.name}
-                    type="button"
-                    aria-label={color.name}
                     onClick={() => handleColorSelect(i)}
-                    className={cn(
-                      "aspect-square w-24 rounded-full border-2 bg-secondary p-1.5 transition flex items-center justify-center overflow-hidden",
+                    title={color.name}
+                    aria-label={color.name}
+                    className={`w-8 h-8 rounded-full border-2 overflow-hidden flex items-center justify-center ${
                       i === selectedColorIndex
-                        ? "border-primary"
-                        : "border-transparent hover:border-neutral-300",
-                    )}
+                        ? "ring-2 ring-offset-2 ring-black border-white"
+                        : "border-gray-300"
+                    }`}
+                    style={
+                      color.hex ? { backgroundColor: color.hex } : undefined
+                    }
                   >
-                    {color.thumbnail ? (
-                      <Image
-                        src={color.thumbnail}
-                        alt={color.name}
-                        width={200}
-                        height={200}
-                        className="size-[90%] object-cover"
-                      />
-                    ) : (
-                      <span className="w-full h-full block bg-gray-200" />
-                    )}
+                    {!color.hex &&
+                      (color.thumbnail ? (
+                        <img
+                          src={color.thumbnail}
+                          alt={color.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-[10px] uppercase">
+                          {color.name.slice(0, 2)}
+                        </span>
+                      ))}
                   </button>
                 ))}
               </div>
@@ -369,50 +417,12 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
             )} */}
           </div>
 
-          <hr className="mt-5 mb-1" />
-
-          <Accordion defaultValue={["benefits"]}>
-            <AccordionItem value="benefits" className="bg-transparent my-0">
-              <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
-                Benefits
-              </AccordionTrigger>
-              <AccordionContent className="text-base" panelStyle="ps-0">
-                <div
-                  className="prose prose-sm max-w-none mt-4 text-gray-600"
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(product.descriptionHtml),
-                  }}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          {product.keyFeatures && product.keyFeatures.length > 0 && (
-            <>
-              <hr />
-              <Accordion defaultValue={["features"]}>
-                <AccordionItem value="features" className="bg-transparent my-0">
-                  <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
-                    Key Features
-                  </AccordionTrigger>
-                  <AccordionContent className="text-base" panelStyle="ps-1">
-                    <ul className="list-disc list-inside">
-                      {product.keyFeatures?.map((f, i) => (
-                        <li key={f + i}>{f}</li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </>
-          )}
-
           {product.specs && product.specs.length > 0 && (
             <>
-              <hr />
+              <hr className="mt-5 mb-1" />
               <Accordion defaultValue={["specs"]}>
                 <AccordionItem value="specs" className="bg-transparent my-0">
-                  <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
+                  <AccordionTrigger className="font-medium uppercase ps-0 hover:no-underline font-anton text-3xl">
                     Technical Specifications
                   </AccordionTrigger>
                   <AccordionContent
@@ -453,6 +463,44 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
                         ))}
                       </div>
                     </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </>
+          )}
+
+          <hr className="mb-1" />
+
+          <Accordion defaultValue={["benefits"]}>
+            <AccordionItem value="benefits" className="bg-transparent my-0">
+              <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
+                Benefits
+              </AccordionTrigger>
+              <AccordionContent className="text-base" panelStyle="ps-0">
+                <div
+                  className="prose prose-sm max-w-none mt-4 text-gray-600"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(product.descriptionHtml),
+                  }}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          {product.keyFeatures && product.keyFeatures.length > 0 && (
+            <>
+              <hr />
+              <Accordion defaultValue={["features"]}>
+                <AccordionItem value="features" className="bg-transparent my-0">
+                  <AccordionTrigger className="font-medium uppercase ps-0 pb-2 hover:no-underline font-anton text-3xl">
+                    Key Features
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base" panelStyle="ps-1">
+                    <ul className="list-disc list-inside">
+                      {product.keyFeatures?.map((f, i) => (
+                        <li key={f + i}>{f}</li>
+                      ))}
+                    </ul>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

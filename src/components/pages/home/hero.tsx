@@ -202,7 +202,9 @@ function Content({
 }) {
   return (
     <div className="max-w-xl space-y-3">
-      <h1 className="text-[42px] font-anton leading-12">{title}</h1>
+      <h1 className="text-3xl md:text-[42px] font-anton md:leading-12">
+        {title}
+      </h1>
       <p className="font-inter text-sm tracking-[-1%] leading-5">
         {description}
       </p>

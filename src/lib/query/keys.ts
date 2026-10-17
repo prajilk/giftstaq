@@ -1,3 +1,4 @@
+import { EMPTY_FILTERS, ProductFilters } from "../shopify/filters";
 import { SortValue } from "../shopify/sort";
 
 export const productKeys = {
@@ -29,6 +30,20 @@ export const recommendationKeys = {
 
 export const collectionProductKeys = {
   all: ["collection-products"] as const,
-  list: (handle: string, first: number, sort: SortValue) =>
-    [...collectionProductKeys.all, handle, first, sort] as const,
+  list: (
+    handle: string,
+    first: number,
+    sort: SortValue,
+    filters: ProductFilters = EMPTY_FILTERS,
+  ) =>
+    [
+      ...collectionProductKeys.all,
+      handle,
+      first,
+      sort,
+      {
+        sustainability: [...filters.sustainability].sort(),
+        price: filters.price,
+      },
+    ] as const,
 };

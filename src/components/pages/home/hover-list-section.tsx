@@ -18,7 +18,7 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
   return (
     <section className="container container-padding-x py-12 lg:py-16">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl lg:text-4xl font-anton uppercase max-w-sm">
+        <h2 className="text-2xl lg:text-4xl font-anton uppercase max-w-sm">
           {heading}
         </h2>
 
@@ -32,9 +32,13 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
         </ContactFormModal>
       </div>
 
-      <div className="w-full mt-14 lg:hidden grid grid-cols-2 gap-4">
+      <div className="w-full mt-8 md:mt-14 lg:hidden grid grid-cols-2 gap-4">
         {rows.map((item) => (
-          <div className="flex flex-col gap-4" key={item.id || item.label}>
+          <Link
+            href={item.link || "#"}
+            className="flex flex-col gap-4"
+            key={item.id || item.label}
+          >
             {typeof item.images[0] !== "string" &&
               item.images[0].mimeType &&
               isImage(item.images[0].mimeType) &&
@@ -42,13 +46,15 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
                 <Image
                   src={item.images[0].url}
                   alt={item.images[0].alt}
-                  width={100}
-                  height={100}
+                  width={400}
+                  height={400}
                   className="w-full aspect-square object-cover rounded-lg"
                 />
               )}
-            <span className="text-xl font-anton uppercase">{item.label}</span>
-          </div>
+            <span className="md:text-xl font-anton uppercase">
+              {item.label}
+            </span>
+          </Link>
         ))}
       </div>
 
@@ -69,7 +75,7 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
             >
               <Marquee className="[--duration:20s] text-black">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <Link href="/" key={i} className="shrink-0">
+                  <Link href={item.link || "#"} key={i} className="shrink-0">
                     <div className="flex items-center gap-8 px-4">
                       <span className="text-7xl uppercase font-anton">
                         {item.label}

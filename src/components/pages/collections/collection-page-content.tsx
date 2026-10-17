@@ -32,7 +32,9 @@ export default function CollectionPageContent({ handle }: { handle: string }) {
       />
       <ProductsListingSection
         title={hero.title}
-        useProductsHook={(sort) => useCollectionProductsList(handle, sort)}
+        useProductsHook={(sort, f) =>
+          useCollectionProductsList(handle, sort, f)
+        }
       />
     </>
   );
