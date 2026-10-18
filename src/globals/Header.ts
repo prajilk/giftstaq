@@ -38,7 +38,7 @@ export const Header: GlobalConfig = {
             {
               name: "groups",
               type: "array",
-              maxRows: 6,
+              maxRows: 15,
               labels: {
                 singular: "Collection Group",
                 plural: "Collection Groups",
@@ -57,7 +57,7 @@ export const Header: GlobalConfig = {
                 {
                   name: "products",
                   type: "array",
-                  maxRows: 10,
+                  maxRows: 15,
                   labels: { singular: "Product", plural: "Products" },
                   fields: [
                     {

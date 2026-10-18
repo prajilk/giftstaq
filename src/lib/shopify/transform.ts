@@ -72,17 +72,23 @@ export interface ProductDetailData {
   collectionName: string | null;
   price: { amount: string; currencyCode: string };
   colors: ColorVariantData[];
-  metafields: Record<string, string>; // 👈 add this
+  metafields: Record<string, string>;
   specs: ProductSpec[];
   keyFeatures: string[];
   idealFor: string[];
   images: string[]; // every product image, used when there's no color option
   sizes: SizeData[]; // used for size-only products
   defaultVariant: { id: string; available: boolean } | null; // no color and no size
+  priceTiers: PriceTier[];
 }
 
 // Fields shown as their own callout sections, not in the generic table
-const FEATURED_KEYS = new Set(["key_features", "ideal_for", "product_info"]);
+const FEATURED_KEYS = new Set([
+  "key_features",
+  "ideal_for",
+  "product_info",
+  "price_tiers",
+]);
 
 // Human-friendly labels for the generic table
 const LABELS: Record<string, string> = {
@@ -93,94 +99,6 @@ const LABELS: Record<string, string> = {
   fit: "Fit",
   branding_method: "Branding Method",
 };
-
-// export function toProductDetail(
-//   product: ShopifyProductDetail,
-// ): ProductDetailData {
-//   const options = product.options ?? [];
-//   const variants = (product.variants?.edges ?? []).map((e) => e.node);
-
-//   const colorOption = options.find(
-//     (opt) =>
-//       opt.name.toLowerCase() === "color" || opt.name.toLowerCase() === "colour",
-//   );
-//   const sizeOption = options.find((opt) => opt.name.toLowerCase() === "size");
-
-//   // Direct lookup, no fuzzy matching needed — the admin already grouped this correctly
-//   const galleryEdges = product.colorGalleries?.references?.edges ?? [];
-//   const galleriesByColor = new Map<string, string[]>();
-
-//   for (const { node } of galleryEdges) {
-//     const colorName = node.colorName?.value;
-//     if (!colorName) continue;
-
-//     const images = (node.images?.references?.edges ?? [])
-//       .map((e) => e.node.image?.url)
-//       .filter((url): url is string => Boolean(url));
-
-//     galleriesByColor.set(colorName, images);
-//   }
-
-//   const colors: ColorVariantData[] = (colorOption?.optionValues ?? []).map(
-//     (colorValue) => {
-//       const colorName = colorValue.name;
-//       const images = galleriesByColor.get(colorName) ?? [];
-
-//       const sizes = (sizeOption?.optionValues ?? []).map((sizeValue) => {
-//         const matchingVariant = variants.find(
-//           (v) =>
-//             v.selectedOptions.some(
-//               (o) => o.name.toLowerCase() === "color" && o.value === colorName,
-//             ) &&
-//             v.selectedOptions.some(
-//               (o) =>
-//                 o.name.toLowerCase() === "size" && o.value === sizeValue.name,
-//             ),
-//         );
-//         return {
-//           value: sizeValue.name,
-//           available: matchingVariant?.availableForSale ?? false,
-//           variantId: matchingVariant?.id ?? null,
-//         };
-//       });
-
-//       return {
-//         name: colorName,
-//         thumbnail: images[0] ?? null,
-//         images,
-//         sizes,
-//       };
-//     },
-//   );
-
-//   const rawMetafields = (product.metafields ?? []).filter(
-//     (mf): mf is ShopifyMetafield => mf !== null && mf.value !== "",
-//   );
-
-//   const keyFeatures =
-//     rawMetafields.find((mf) => mf.key === "key_features")?.value ?? null;
-//   const idealFor =
-//     rawMetafields.find((mf) => mf.key === "ideal_for")?.value ?? null;
-
-//   const specs = rawMetafields
-//     .filter((mf) => !FEATURED_KEYS.has(mf.key))
-//     .map((mf) => ({
-//       label: LABELS[mf.key] ?? mf.key.replace(/[_-]/g, " "), // fallback: prettify unknown keys automatically
-//       value: isValidJSON(mf.value) ? JSON.parse(mf.value) : mf.value,
-//     }));
-
-//   return {
-//     id: product.id,
-//     title: product.title,
-//     description: product.description,
-//     collectionName: product.collections?.edges[0]?.node.title ?? null,
-//     price: product.priceRange.minVariantPrice,
-//     colors,
-//     keyFeatures: keyFeatures ? JSON.parse(keyFeatures) : null,
-//     idealFor: idealFor ? JSON.parse(idealFor) : null,
-//     specs,
-//   };
-// }
 
 export interface CollectionHeroData {
   title: string;
@@ -404,5 +322,37 @@ export function toProductDetail(
       !colorOption && !sizeOption && variants[0]
         ? { id: variants[0].id, available: variants[0].availableForSale }
         : null,
+    priceTiers: parsePriceTiers(
+      rawMetafields.find((mf) => mf.key === "price_tiers"),
+    ),
   };
+}
+
+export interface PriceTier {
+  min: number;
+  max: number | null; // null = open-ended ("21+")
+  price: number;
+}
+
+function parsePriceTiers(mf?: ShopifyMetafield): PriceTier[] {
+  if (!mf) return [];
+  try {
+    const raw = JSON.parse(mf.value) as { min: number; price: number }[];
+    const sorted = raw
+      .filter(
+        (t) =>
+          Number.isFinite(t.min) &&
+          Number.isFinite(t.price) &&
+          t.min >= 1 &&
+          t.price >= 0,
+      )
+      .sort((a, b) => a.min - b.min);
+    return sorted.map((t, i) => ({
+      min: t.min,
+      max: sorted[i + 1] ? sorted[i + 1].min - 1 : null,
+      price: t.price,
+    }));
+  } catch {
+    return []; // bad JSON in Admin: hide the table instead of crashing
+  }
 }

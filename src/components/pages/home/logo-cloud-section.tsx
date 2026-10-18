@@ -34,8 +34,8 @@ function Card({ src, alt }: { src: string; alt: string }) {
       <Image
         src={src}
         alt={alt}
-        width={130}
-        height={100}
+        width={180}
+        height={120}
         className="aspect-3/2 object-contain"
       />
     </div>

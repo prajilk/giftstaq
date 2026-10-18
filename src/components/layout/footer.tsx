@@ -306,7 +306,7 @@ const Footer = ({
                   className="bg-[#1D1D1D] rounded-full px-3 py-2"
                   target={p.link.isExternal ? "_blank" : "_self"}
                 >
-                  Privacy Policy
+                  {p.link.label}
                 </Link>
               ))}
             </div>

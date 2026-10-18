@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import { cartKeys } from "@/lib/query/keys";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { useColorMap } from "@/providers/colors-provider";
+import { PriceTiersTable } from "./price-tiers-table";
 
 const ProductDetailsSection = ({ handle }: { handle: string }) => {
   const { data, isLoading, isError } = useProduct(handle);
@@ -416,6 +417,11 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
               <p className="text-sm text-gray-500 mt-2">Please select a size</p>
             )} */}
           </div>
+
+          <PriceTiersTable
+            tiers={product.priceTiers}
+            currencyCode={product.price.currencyCode}
+          />
 
           {product.specs && product.specs.length > 0 && (
             <>
