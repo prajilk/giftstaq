@@ -4,7 +4,7 @@ import { fetchProductsFromApi } from "@/lib/api/products";
 import { productKeys } from "@/lib/query/keys";
 import { SORT_MAP, SortValue } from "@/lib/shopify/sort";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 60;
 
 export function useProducts(sort: SortValue = "latest") {
   const { sortKey, reverse } = SORT_MAP[sort];

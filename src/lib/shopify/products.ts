@@ -3,7 +3,7 @@ import { GET_PRODUCT_BY_HANDLE_QUERY, GET_PRODUCTS_QUERY } from "./queries";
 import { ProductByHandleResponse, ProductsResponse } from "./types";
 
 export async function getProducts(
-  first = 12,
+  first = 60,
   after?: string,
   sortKey = "CREATED_AT",
   reverse = true,

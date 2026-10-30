@@ -39,7 +39,6 @@ function Card({ src, alt }: { src: string; alt: string }) {
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="aspect-3/2== object-fill"
-        unoptimized
       />
     </div>
   );

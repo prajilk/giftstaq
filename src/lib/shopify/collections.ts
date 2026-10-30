@@ -14,7 +14,7 @@ export async function getCollections(first = 6) {
 
 export async function getCollectionByHandle(
   handle: string,
-  first = 12,
+  first = 60,
   after?: string,
   sortKey = "COLLECTION_DEFAULT",
   reverse = false,

@@ -25,7 +25,6 @@ const FooterCTASection = ({
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover"
-              unoptimized
             />
           )}
       </div>
@@ -34,13 +33,7 @@ const FooterCTASection = ({
           logo.mimeType &&
           isImage(logo.mimeType) &&
           logo.url && (
-            <Image
-              src={logo.url}
-              alt={logo.alt}
-              width={80}
-              height={80}
-              unoptimized
-            />
+            <Image src={logo.url} alt={logo.alt} width={80} height={80} />
           )}
         <h1 className="text-2xl font-anton uppercase max-w-sm">{heading}</h1>
         <p className="max-w-md text-sm">{description}</p>
@@ -61,7 +54,6 @@ const FooterCTASection = ({
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover"
-              unoptimized
             />
           )}
       </div>

@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const { handle } = await params;
   const searchParams = request.nextUrl.searchParams;
-  const first = Math.min(Number(searchParams.get("first")) || 12, 50);
+  const first = Math.min(Number(searchParams.get("first")) || 60, 100);
   const after = searchParams.get("after") || undefined;
   const sortKey = searchParams.get("sortKey") || "COLLECTION_DEFAULT";
   const reverse = searchParams.get("reverse") === "true";

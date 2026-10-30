@@ -24,7 +24,7 @@ export default async function CollectionPage({
   try {
     initialData = await getCollectionByHandle(
       handle,
-      12,
+      60,
       undefined,
       sortKey,
       reverse,
@@ -40,11 +40,11 @@ export default async function CollectionPage({
 
   // Now prefetch into the cache using the SAME shape useInfiniteQuery expects
   await queryClient.infiniteQuery({
-    queryKey: collectionProductKeys.list(handle, 12, "latest"),
+    queryKey: collectionProductKeys.list(handle, 60, "latest"),
     queryFn: ({ pageParam }) =>
       getCollectionByHandle(
         handle,
-        12,
+        60,
         pageParam as string | undefined,
         sortKey,
         reverse,

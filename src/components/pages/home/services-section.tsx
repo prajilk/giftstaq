@@ -40,7 +40,7 @@ function Service({
     return null;
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <Image src={img.url} alt="Services" width={50} height={50} unoptimized />
+      <Image src={img.url} alt="Services" width={50} height={50} />
       <div>
         <h6 className="text-base md:text-lg font-semibold md:leading-7">
           {title}

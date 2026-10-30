@@ -29,7 +29,6 @@ const Header = ({ logo, navItems, offers }: HeaderProps) => {
                   width={125}
                   height={100}
                   loading="eager"
-                  unoptimized
                 />
               </Link>
             )}

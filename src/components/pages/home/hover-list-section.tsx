@@ -49,7 +49,6 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
                   width={400}
                   height={400}
                   className="w-full aspect-square object-cover rounded-lg"
-                  unoptimized
                 />
               )}
             <span className="md:text-xl font-anton uppercase">
@@ -92,7 +91,6 @@ export default function HoverList({ heading, rows }: HoverMarqueeBlock) {
                             width={100}
                             height={70}
                             className="w-28 h-full aspect-video shrink-0 object-cover rounded-md"
-                            unoptimized
                           />
                         )}
                     </div>

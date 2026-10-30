@@ -30,7 +30,6 @@ const StepsCarousel = ({ steps }: { steps: StepsBlock["steps"] }) => {
                     width={200}
                     height={200}
                     className="rounded-md object-cover aspect-square shrink-0"
-                    unoptimized
                   />
                 )}
 

@@ -12,7 +12,7 @@ export async function fetchCollectionsFromApi(
 
 export async function fetchCollectionFromApi(
   handle: string,
-  first = 12,
+  first = 60,
   after?: string,
   sortKey = "COLLECTION_DEFAULT",
   reverse = false,

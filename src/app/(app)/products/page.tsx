@@ -17,8 +17,8 @@ const ProductsPage = async () => {
   // Runs on the server, fetches directly from Shopify (no self-HTTP-call)
   await queryClient
     .infiniteQuery({
-      queryKey: productKeys.list(12, "latest"),
-      queryFn: () => getProducts(12),
+      queryKey: productKeys.list(60, "latest"),
+      queryFn: () => getProducts(60),
       initialPageParam: undefined,
     })
     .catch(noop); // don't crash SSR if Shopify is briefly down — client will retry

@@ -49,13 +49,7 @@ const FilterContent = ({ filters, onChange }: FilterContentProps) => {
     <div>
       <div className="flex flex-col pb-3">
         <div className="bg-primary rounded-2xl p-6">
-          <Image
-            src="/logo-silver.webp"
-            alt="Logo"
-            width={60}
-            height={60}
-            unoptimized
-          />
+          <Image src="/logo-silver.webp" alt="Logo" width={60} height={60} />
 
           <h5 className="text-2xl text-white font-anton uppercase mt-3 mb-6">
             Need it fast? ask about rush production and shipping.

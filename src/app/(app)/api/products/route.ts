@@ -3,7 +3,7 @@ import { getProducts } from "@/lib/shopify/products";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const first = Math.min(Number(searchParams.get("first")) || 12, 50);
+  const first = Math.min(Number(searchParams.get("first")) || 60, 100);
   const after = searchParams.get("after") || undefined;
   const sortKey = searchParams.get("sortKey") || "CREATED_AT";
   const reverse = searchParams.get("reverse") === "true";

@@ -68,11 +68,7 @@ function CategoryItem({
           )}
         </div>
 
-        <div
-          className="absolute inset-x-0 bottom-0 h-1/3 backdrop-blur-md
-           [mask-image:linear-gradient(to_top,black_30%,transparent)]
-           [-webkit-mask-image:linear-gradient(to_top,black_30%,transparent)]"
-        ></div>
+        <div className="absolute inset-x-0 bottom-0 h-1/3 backdrop-blur-md mask-[linear-gradient(to_top,black_30%,transparent)] [-webkit-mask-image:linear-gradient(to_top,black_30%,transparent)]"></div>
 
         <div className="absolute z-10 bottom-0 uppercase font-medium text-sm w-full py-3 flex justify-center items-center text-white font-anton md:text-2xl">
           <span>{title}</span>

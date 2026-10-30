@@ -4,7 +4,7 @@ import { collectionProductKeys } from "@/lib/query/keys";
 import { COLLECTION_SORT_MAP, SortValue } from "@/lib/shopify/sort";
 import { EMPTY_FILTERS, ProductFilters } from "@/lib/shopify/filters";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 60;
 
 export function useCollectionProducts(
   handle: string,

@@ -1,7 +1,7 @@
 import { ProductByHandleResponse, ProductsResponse } from "@/lib/shopify/types";
 
 export async function fetchProductsFromApi(
-  first = 12,
+  first = 60,
   after?: string,
   sortKey = "CREATED_AT",
   reverse = true,

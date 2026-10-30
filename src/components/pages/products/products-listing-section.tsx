@@ -9,7 +9,6 @@ import { ProductCardData } from "@/lib/shopify/transform";
 import { useState } from "react";
 import { SortValue } from "@/lib/shopify/sort";
 import { ProductsListResult } from "@/lib/shopify/types";
-import { useProductsList } from "@/hooks/useProductsList";
 import { useCollectionProductsList } from "@/hooks/useCollectionProductsList";
 import { ALL_PRODUCTS_HANDLE } from "@/lib/shopify/constants";
 import { EMPTY_FILTERS, ProductFilters } from "@/lib/shopify/filters";
