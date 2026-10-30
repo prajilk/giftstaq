@@ -1,16 +1,20 @@
-import type { CollectionConfig } from 'payload'
+import path from "path";
+import type { CollectionConfig } from "payload";
 
 export const Media: CollectionConfig = {
-  slug: 'media',
+  slug: "media",
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'alt',
-      type: 'text',
+      name: "alt",
+      type: "text",
       required: true,
     },
   ],
-  upload: true,
-}
+  upload: {
+    staticDir: path.resolve(process.cwd(), "uploads/media"),
+    mimeTypes: ["image/*", "application/pdf"],
+  },
+};

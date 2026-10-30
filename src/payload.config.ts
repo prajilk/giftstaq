@@ -54,13 +54,13 @@ export default buildConfig({
     url: process.env.DATABASE_URL || "",
   }),
   sharp,
-  plugins: [
-    vercelBlobStorage({
-      enabled: true,
-      collections: {
-        media: true,
-      },
-      token: process.env.BLOB_READ_WRITE_TOKEN || "",
-    }),
-  ],
+  // plugins: [
+  //   vercelBlobStorage({
+  //     enabled: true,
+  //     collections: {
+  //       media: true,
+  //     },
+  //     token: process.env.BLOB_READ_WRITE_TOKEN || "",
+  //   }),
+  // ],
 });
