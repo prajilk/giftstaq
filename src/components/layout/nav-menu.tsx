@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -9,45 +11,19 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Header } from "@/payload-types";
+import { useState } from "react";
 
 export function NavMenu({ navLinks }: { navLinks: Header["navItems"] }) {
+  const [value, setValue] = useState<string | null>(null);
+
+  if (!navLinks) return null;
+
+  const closeMenu = () => setValue(null);
+
   if (!navLinks) return null;
   return (
-    <NavigationMenu>
+    <NavigationMenu value={value} onValueChange={setValue}>
       <NavigationMenuList className="bg-white rounded-full hidden lg:flex">
-        {/* <NavigationMenuItem>
-          <NavigationMenuTrigger>With Icon</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[200px]">
-              <li>
-                <NavigationMenuLink
-                  render={
-                    <Link href="#" className="flex-row items-center gap-2">
-                      <CircleAlertIcon />
-                      Backlog
-                    </Link>
-                  }
-                />
-                <NavigationMenuLink
-                  render={
-                    <Link href="#" className="flex-row items-center gap-2">
-                      <CircleDashedIcon />
-                      To Do
-                    </Link>
-                  }
-                />
-                <NavigationMenuLink
-                  render={
-                    <Link href="#" className="flex-row items-center gap-2">
-                      <CircleCheckIcon />
-                      Done
-                    </Link>
-                  }
-                />
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem> */}
         {navLinks.map((link) => (
           <NavigationMenuItem key={link.id}>
             {link.blockType === "link" ? (
@@ -74,15 +50,36 @@ export function NavMenu({ navLinks }: { navLinks: Header["navItems"] }) {
                         key={`${component.collectionName} ${i}`}
                         className="flex-1 min-w-40"
                       >
-                        <Link href={component.href} className="font-semibold">
+                        <NavigationMenuLink
+                          render={
+                            <Link
+                              href={component.href}
+                              onClick={closeMenu}
+                              className="font-semibold p-0! m-0 hover:bg-transparent"
+                            />
+                          }
+                        >
                           {component.collectionName}
-                        </Link>
+                        </NavigationMenuLink>
+                        {/* <Link href={component.href} className="font-semibold">
+                          {component.collectionName}
+                        </Link> */}
                         <ul className="mt-3 space-y-2 text-sm opacity-90">
                           {component.products?.map((p) => (
                             <li key={p.product}>
-                              <Link href={p.href} className="hover:underline">
+                              <NavigationMenuLink
+                                render={
+                                  <Link
+                                    href={p.href}
+                                    onClick={closeMenu}
+                                    className="hover:underline p-0! m-0 hover:bg-transparent"
+                                  />
+                                }
+                              >
                                 {p.product}
-                              </Link>
+                              </NavigationMenuLink>
+                              {/* <Link href={p.href} className="hover:underline">
+                              </Link> */}
                             </li>
                           ))}
                         </ul>
@@ -94,18 +91,6 @@ export function NavMenu({ navLinks }: { navLinks: Header["navItems"] }) {
             )}
           </NavigationMenuItem>
         ))}
-        {/* <NavigationMenuItem>
-          <NavigationMenuLink
-            className={navigationMenuTriggerStyle()}
-            render={<Link href="/about-us">About us</Link>}
-          />
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            className={navigationMenuTriggerStyle()}
-            render={<Link href="/solutions">Solutions</Link>}
-          />
-        </NavigationMenuItem> */}
       </NavigationMenuList>
     </NavigationMenu>
   );

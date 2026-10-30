@@ -65,6 +65,7 @@ export function CartSheet() {
                     line.merchandise.image.altText ||
                     line.merchandise.product.title
                   }
+                  unoptimized
                   width={100}
                   height={100}
                   className="size-16 object-cover rounded"

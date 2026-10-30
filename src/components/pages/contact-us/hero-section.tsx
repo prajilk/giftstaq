@@ -46,6 +46,7 @@ const HeroSection = ({
               fill
               sizes="(max-width: 768px) 100vw, 1200px"
               className="object-cover object-[80%_50%] lg:object-center"
+              unoptimized
             />
           )}
 

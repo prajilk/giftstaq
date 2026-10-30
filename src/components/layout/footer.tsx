@@ -35,7 +35,13 @@ const Footer = ({
         <div className="lg:grid lg:grid-cols-3 gap-5 container container-padding-x">
           <div className="space-y-6">
             {logo.mimeType && isImage(logo.mimeType) && logo.url && (
-              <Image src={logo.url} alt={logo.alt} width={180} height={130} />
+              <Image
+                src={logo.url}
+                alt={logo.alt}
+                width={180}
+                height={130}
+                unoptimized
+              />
             )}
             <div className="space-y-4">
               <h4 className="text-2xl font-anton uppercase max-w-xs">
@@ -286,6 +292,7 @@ const Footer = ({
                       alt={s.iconLink.icon.alt}
                       width={30}
                       height={30}
+                      unoptimized
                     />
                   ) : (
                     s.iconLink.label

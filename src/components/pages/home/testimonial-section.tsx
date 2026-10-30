@@ -23,6 +23,7 @@ const TestimonialSection = ({
               width={400}
               height={400}
               className="hidden lg:block rounded-xl object-cover w-[80%] aspect-square"
+              unoptimized
             />
           )}
 

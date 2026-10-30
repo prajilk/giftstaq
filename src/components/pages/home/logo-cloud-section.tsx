@@ -30,13 +30,16 @@ export default LogoCloudSection;
 
 function Card({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="bg-[#C31B24] rounded-md aspect-video flex justify-center items-center">
+    <div className="relative bg-[#C31B24] rounded-md aspect-video overflow-hidden">
       <Image
         src={src}
         alt={alt}
-        width={180}
-        height={120}
-        className="aspect-3/2 object-contain"
+        // width={180}
+        // height={120}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="aspect-3/2== object-fill"
+        unoptimized
       />
     </div>
   );

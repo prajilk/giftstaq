@@ -189,6 +189,7 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
                         width={500}
                         height={500}
                         className="size-[90%] object-cover"
+                        unoptimized
                       />
                     </div>
                   </CarouselItem>
@@ -571,6 +572,7 @@ function Thumbnail({
         width={400}
         height={400}
         className="h-full w-full"
+        unoptimized
       />
     </button>
   );

@@ -25,13 +25,16 @@ function ProductCard({
   return (
     <div className="shrink-0 h-fit">
       <Link href={`/products/${handle}`}>
-        <div className="relative bg-secondary rounded-lg aspect-[1/1.2] flex items-center justify-center p-5 overflow-hidden">
+        <div className="relative bg-secondary rounded-lg aspect-square flex items-center justify-center p-5 overflow-hidden">
           <Image
             src={image.url}
             alt={title}
-            width={200}
-            height={200}
-            className="hover:scale-110 transition-transform duration-300"
+            // width={200}
+            // height={200}
+            fill
+            unoptimized
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="hover:scale-110 transition-transform duration-300 object-cover"
           />
 
           {colors.length > 0 && (
