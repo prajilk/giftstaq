@@ -18,6 +18,7 @@ import { EmailSubscribeSubmissions } from "./collections/EmailSubscribeSubmissio
 import { LegalPages } from "./collections/LegalPages";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { Colors } from "./collections/Colors";
+import { TemporaryPages } from "./collections/TemporaryPages";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -37,6 +38,7 @@ export default buildConfig({
     ContactSubmissions,
     EmailSubscribeSubmissions,
     LegalPages,
+    TemporaryPages,
   ],
   globals: [
     Homepage,

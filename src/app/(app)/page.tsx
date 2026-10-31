@@ -27,12 +27,27 @@ export default async function Home() {
     <main>
       {homepage.layout?.map((block, index) => {
         switch (block.blockType) {
-          case "hero":
-            if (typeof block.backgroundImage[0] === "string") return null;
-            const image = block.backgroundImage as Media[];
-            return (
-              <Hero key={index} hero={{ ...block, backgroundImage: image }} />
-            );
+          case "hero": {
+            // Keep only rows whose images are populated Media objects
+            // (upload fields are typed string | Media)
+            const backgrounds = (block.backgrounds ?? []).flatMap((bg) => {
+              if (typeof bg.desktopImage !== "object" || !bg.desktopImage)
+                return [];
+
+              return [
+                {
+                  ...bg,
+                  desktopImage: bg.desktopImage,
+                  mobileImage:
+                    typeof bg.mobileImage === "object" ? bg.mobileImage : null,
+                },
+              ];
+            });
+
+            if (backgrounds.length === 0) return null;
+
+            return <Hero key={index} hero={{ ...block, backgrounds }} />;
+          }
 
           case "services":
             return <ServicesSection key={index} {...block} />;

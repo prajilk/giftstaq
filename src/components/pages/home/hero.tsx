@@ -7,7 +7,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { HeroBlock, Media } from "@/payload-types";
@@ -26,6 +26,18 @@ const Hero = ({
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const rafRef = useRef<number>(0);
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const slides = useMemo(
+    () =>
+      (hero?.backgrounds ?? []).map((bg) => {
+        const mobile = bg.mobileImage as Media | null | undefined;
+        const desktop = bg.desktopImage as Media;
+        return isMobile && mobile ? mobile : desktop;
+      }),
+    [hero?.backgrounds, isMobile],
+  );
 
   // const plugin = useRef(
   //   Autoplay({
@@ -63,7 +75,9 @@ const Hero = ({
     setProgress(0);
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
-    const slide = hero.backgroundImage[current] as Media;
+    const slide = slides[current] as Media;
+    if (!slide) return;
+
     const video = videoRefs.current[current];
 
     if (slide.mimeType && !isImage(slide.mimeType) && video) {
@@ -103,11 +117,9 @@ const Hero = ({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, current, hero.backgroundImage, autoPlay]);
+  }, [api, current, slides, autoPlay]);
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
-
-  if (!hero || hero.backgroundImage.length === 0) return null;
+  if (!hero || slides.length === 0) return null;
 
   return (
     <section className="relative w-full -mt-20 h-176 min-h-screen text-white">
@@ -121,24 +133,24 @@ const Hero = ({
         className="size-full relative"
       >
         <CarouselContent className="ml-0">
-          {(hero.backgroundImage as Media[]).map((data, index) => {
-            if (data.mimeType && !isImage(data.mimeType)) {
-              videoRefs.current[index] ??= null;
-            }
+          {slides.map((data, index) => {
+            // if (data.mimeType && !isImage(data.mimeType)) {
+            //   videoRefs.current[index] ??= null;
+            // }
+            const isImg = !!data.mimeType && isImage(data.mimeType);
+            const isVideo = !!data.mimeType && !isImage(data.mimeType);
 
             return (
               <CarouselItem key={index} className="h-176 min-h-screen pl-0">
                 <div
                   className="relative flex flex-col justify-center items-center h-full bg-no-repeat bg-center bg-cover gap-32 pb-10"
                   style={
-                    data.mimeType && isImage(data.mimeType)
-                      ? {
-                          backgroundImage: `url(${isMobile ? data.url : data.url})`,
-                        }
+                    isImg && data.url
+                      ? { backgroundImage: `url('${data.url}')` }
                       : {}
                   }
                 >
-                  {data.mimeType && !isImage(data.mimeType) && data.url && (
+                  {isVideo && data.url && (
                     <video
                       src={data.url}
                       ref={(el) => {
@@ -167,7 +179,7 @@ const Hero = ({
 
         <div className="absolute z-20 -left-5 lg:left-auto lg:right-0 bottom-6 lg:bottom-10 mx-10">
           <CarouselIndicator
-            count={hero.backgroundImage.length}
+            count={slides.length}
             current={current}
             progress={progress}
             onSelect={(i) => api?.scrollTo(i)}

@@ -1,3 +1,4 @@
+import { Marquee } from "@/components/ui/marquee";
 import type { Media, ServicesBlock } from "@/payload-types";
 import Image from "next/image";
 import { isImage } from "payload/shared";
@@ -6,7 +7,7 @@ const ServicesSection = ({ services }: ServicesBlock) => {
   if (!services) return null;
   return (
     <section className="bg-secondary">
-      <div className="container container-padding-x py-7 lg:py-10 flex items-center justify-evenly overflow-x-scroll scrollbar-thin lg:scrollbar-none gap-5 lg:gap-0">
+      {/* <div className="container container-padding-x py-7 lg:py-10 flex items-center justify-evenly overflow-x-scroll scrollbar-thin lg:scrollbar-none gap-5 lg:gap-0">
         {services.map((s) => (
           <Service
             img={s.icon}
@@ -15,7 +16,17 @@ const ServicesSection = ({ services }: ServicesBlock) => {
             key={s.id}
           />
         ))}
-      </div>
+      </div> */}
+      <Marquee className="[--duration:30s] py-7 lg:py-10 gap-5 lg:gap-0">
+        {services.map((s) => (
+          <Service
+            img={s.icon}
+            title={s.title}
+            description={s.description}
+            key={s.id}
+          />
+        ))}
+      </Marquee>
     </section>
   );
 };

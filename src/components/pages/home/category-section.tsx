@@ -19,14 +19,14 @@ const CategorySection = async ({ heading }: CategoryBlock) => {
     .catch(() => {}); // graceful degrade to client-side fetch, same reasoning as the products listing
 
   return (
-    <section className="container container-padding-x py-12 lg:py-16 space-y-5 md:space-y-10">
+    <section className="container container-padding-x py-8 lg:py-16 space-y-5 md:space-y-10">
       <div className="flex items-center justify-between">
         <h1 className="font-anton uppercase text-2xl lg:text-4xl">{heading}</h1>
-        <Link href="/collections" className="hidden lg:block">
+        {/* <Link href="/collections" className="hidden lg:block">
           <Button variant="ghost" className="cursor-pointer">
             View all <ArrowRight />
           </Button>
-        </Link>
+        </Link> */}
       </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CategoryList />

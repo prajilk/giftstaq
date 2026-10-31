@@ -31,7 +31,7 @@ export function ProductsCarousel({
           >
             <Link href={item.link}>
               <div className="group space-y-2 bg-white rounded-xl p-2">
-                <div className="bg-secondary flex items-center justify-center w-full aspect-square rounded-lg overflow-hidden">
+                <div className="relative bg-secondary flex items-center justify-center w-full aspect-square rounded-lg overflow-hidden">
                   {typeof item.image !== "string" &&
                     item.image.mimeType &&
                     isImage(item.image.mimeType) &&
@@ -39,8 +39,9 @@ export function ProductsCarousel({
                       <Image
                         src={item.image.url}
                         alt={item.image.alt}
-                        width={150}
-                        height={150}
+                        // width={150}
+                        // height={150}
+                        fill
                         className="object-cover group-hover:scale-110 transition-transform duration-300"
                         unoptimized
                       />

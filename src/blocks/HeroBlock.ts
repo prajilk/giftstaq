@@ -27,11 +27,30 @@ export const HeroBlock: Block = {
       fields: [linkField()],
     },
     {
-      name: "backgroundImage",
-      type: "upload",
+      name: "backgrounds",
+      type: "array",
       required: true,
-      hasMany: true,
-      relationTo: "media",
+      minRows: 1,
+      labels: {
+        singular: "Background",
+        plural: "Backgrounds",
+      },
+      fields: [
+        {
+          name: "desktopImage",
+          type: "upload",
+          relationTo: "media",
+          required: true,
+        },
+        {
+          name: "mobileImage",
+          type: "upload",
+          relationTo: "media",
+          admin: {
+            description: "Optional. Falls back to the desktop image if empty.",
+          },
+        },
+      ],
     },
   ],
 };

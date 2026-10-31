@@ -73,6 +73,7 @@ export interface Config {
     'contact-submissions': ContactSubmission;
     'email-subscribe-submissions': EmailSubscribeSubmission;
     'legal-pages': LegalPage;
+    'temporary-pages': TemporaryPage;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'email-subscribe-submissions': EmailSubscribeSubmissionsSelect<false> | EmailSubscribeSubmissionsSelect<true>;
     'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
+    'temporary-pages': TemporaryPagesSelect<false> | TemporaryPagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -172,7 +174,6 @@ export interface User {
 export interface Media {
   id: string;
   alt: string;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -258,6 +259,22 @@ export interface LegalPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "temporary-pages".
+ */
+export interface TemporaryPage {
+  id: string;
+  title: string;
+  /**
+   * e.g. "employee-onboarding" — used in the URL - lowercase only!
+   */
+  slug: string;
+  whatsappNumber: string;
+  images: (string | Media)[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -303,6 +320,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'legal-pages';
         value: string | LegalPage;
+      } | null)
+    | ({
+        relationTo: 'temporary-pages';
+        value: string | TemporaryPage;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -375,7 +396,6 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -429,6 +449,18 @@ export interface LegalPagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "temporary-pages_select".
+ */
+export interface TemporaryPagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  whatsappNumber?: T;
+  images?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -511,7 +543,14 @@ export interface HeroBlock {
     };
     id?: string | null;
   }[];
-  backgroundImage: (string | Media)[];
+  backgrounds: {
+    desktopImage: string | Media;
+    /**
+     * Optional. Falls back to the desktop image if empty.
+     */
+    mobileImage?: (string | null) | Media;
+    id?: string | null;
+  }[];
   id?: string | null;
   blockName?: string | null;
   blockType: 'hero';
@@ -882,7 +921,13 @@ export interface HeroBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
-  backgroundImage?: T;
+  backgrounds?:
+    | T
+    | {
+        desktopImage?: T;
+        mobileImage?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

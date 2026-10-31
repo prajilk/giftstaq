@@ -11,7 +11,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Header } from "@/payload-types";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
+import NavGroup from "./nav-group";
 
 export function NavMenu({ navLinks }: { navLinks: Header["navItems"] }) {
   const [value, setValue] = useState<string | null>(null);
@@ -44,46 +45,13 @@ export function NavMenu({ navLinks }: { navLinks: Header["navItems"] }) {
                   <Link href={link.href}>{link.label}</Link>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="flex justify-evenly w-fit gap-2 max-w-full p-3 overflow-x-scroll scrollbar-thin">
-                    {link.groups?.map((component, i) => (
-                      <li
-                        key={`${component.collectionName} ${i}`}
-                        className="flex-1 min-w-40"
-                      >
-                        <NavigationMenuLink
-                          render={
-                            <Link
-                              href={component.href}
-                              onClick={closeMenu}
-                              className="font-semibold p-0! m-0 hover:bg-transparent"
-                            />
-                          }
-                        >
-                          {component.collectionName}
-                        </NavigationMenuLink>
-                        {/* <Link href={component.href} className="font-semibold">
-                          {component.collectionName}
-                        </Link> */}
-                        <ul className="mt-3 space-y-2 text-sm opacity-90">
-                          {component.products?.map((p) => (
-                            <li key={p.product}>
-                              <NavigationMenuLink
-                                render={
-                                  <Link
-                                    href={p.href}
-                                    onClick={closeMenu}
-                                    className="hover:underline p-0! m-0 hover:bg-transparent"
-                                  />
-                                }
-                              >
-                                {p.product}
-                              </NavigationMenuLink>
-                              {/* <Link href={p.href} className="hover:underline">
-                              </Link> */}
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
+                  <ul className="flex flex-wrap w-fit gap-2 max-w-full p-3 max-h-[calc(100vh-100px)] overflow-y-scroll scrollbar-thin">
+                    {link.groups?.map((group, i) => (
+                      <NavGroup
+                        key={group.id ?? `${group.collectionName}-${i}`}
+                        group={group}
+                        closeMenu={closeMenu}
+                      />
                     ))}
                   </ul>
                 </NavigationMenuContent>
