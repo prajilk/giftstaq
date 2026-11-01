@@ -39,6 +39,15 @@ const Hero = ({
     [hero?.backgrounds, isMobile],
   );
 
+  const pairs = useMemo(
+    () =>
+      (hero?.backgrounds ?? []).map((bg) => ({
+        desktop: bg.desktopImage as Media,
+        mobile: (bg.mobileImage as Media | null | undefined) ?? null,
+      })),
+    [hero?.backgrounds],
+  );
+
   // const plugin = useRef(
   //   Autoplay({
   //     delay: 5000,
@@ -133,26 +142,38 @@ const Hero = ({
         className="size-full relative"
       >
         <CarouselContent className="ml-0">
-          {slides.map((data, index) => {
-            // if (data.mimeType && !isImage(data.mimeType)) {
-            //   videoRefs.current[index] ??= null;
-            // }
-            const isImg = !!data.mimeType && isImage(data.mimeType);
-            const isVideo = !!data.mimeType && !isImage(data.mimeType);
+          {pairs.map(({ desktop, mobile }, index) => {
+            const active = slides[index]; // used only to detect image vs video
+            const isImg = !!active.mimeType && isImage(active.mimeType);
+            const isVideo = !!active.mimeType && !isImage(active.mimeType);
 
             return (
-              <CarouselItem key={index} className="h-176 min-h-screen pl-0">
-                <div
-                  className="relative flex flex-col justify-center items-center h-full bg-no-repeat bg-center bg-cover gap-32 pb-10"
-                  style={
-                    isImg && data.url
-                      ? { backgroundImage: `url('${data.url}')` }
-                      : {}
-                  }
-                >
-                  {isVideo && data.url && (
+              <CarouselItem
+                key={hero.backgrounds[index]?.id ?? index}
+                className="h-176 min-h-screen pl-0"
+              >
+                <div className="relative flex flex-col justify-center items-center h-full gap-32 pb-10">
+                  {isImg && desktop.url && (
+                    <picture>
+                      {mobile?.url && (
+                        <source
+                          media="(max-width: 767px)"
+                          srcSet={mobile.url}
+                        />
+                      )}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={desktop.url}
+                        alt={desktop.alt ?? ""}
+                        fetchPriority={index === 0 ? "high" : undefined}
+                        className="absolute inset-0 size-full object-cover"
+                      />
+                    </picture>
+                  )}
+
+                  {isVideo && active.url && (
                     <video
-                      src={data.url}
+                      src={active.url}
                       ref={(el) => {
                         videoRefs.current[index] = el;
                       }}
@@ -161,16 +182,8 @@ const Hero = ({
                       controls={false}
                       playsInline
                       className="absolute inset-0 size-full object-cover pointer-events-none"
-                    ></video>
-                  )}
-
-                  {/* If each slide have individual content!!! */}
-                  {/* <div className="absolute bottom-10 left-10">
-                    <Content
-                      title={hero.title}
-                      description={hero.description}
                     />
-                  </div> */}
+                  )}
                 </div>
               </CarouselItem>
             );

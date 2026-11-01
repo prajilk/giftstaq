@@ -182,12 +182,13 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
               <CarouselContent>
                 {galleryImages.map((image) => (
                   <CarouselItem key={image}>
-                    <div className="flex aspect-square items-center justify-center rounded-xl bg-[#EFEAE2] p-6">
+                    <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-[#EFEAE2] p-6">
                       <Image
                         src={image}
                         alt="Product image"
-                        width={500}
-                        height={500}
+                        // width={500}
+                        // height={500}
+                        fill
                         className="size-[90%] object-cover"
                         unoptimized
                       />

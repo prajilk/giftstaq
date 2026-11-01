@@ -90,6 +90,14 @@ export const Header: GlobalConfig = {
         },
       ],
     },
+    {
+      name: "whatsapp_number",
+      type: "text",
+    },
+    {
+      name: "mail",
+      type: "email",
+    },
   ],
   hooks: {
     afterChange: [revalidateHeaderOrFooter],

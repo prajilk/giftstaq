@@ -11,6 +11,7 @@ import { getPayload } from "payload";
 import payloadConfig from "@/payload.config";
 import { ColorsProvider } from "@/providers/colors-provider";
 import { getColorMap } from "@/lib/payload/colors";
+import Widget from "@/components/layout/widget";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -59,6 +60,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               <Header {...header} />
               <main className="flex-1">{children}</main>
               <Footer {...footer} />
+              <Widget
+                whatsapp_number={header?.whatsapp_number}
+                mail={header?.mail}
+              />
             </TooltipProvider>
           </ColorsProvider>
         </Providers>
