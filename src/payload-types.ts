@@ -770,6 +770,8 @@ export interface Header {
     offer: string;
     id?: string | null;
   }[];
+  whatsapp_number?: string | null;
+  mail?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1159,6 +1161,8 @@ export interface HeaderSelect<T extends boolean = true> {
         offer?: T;
         id?: T;
       };
+  whatsapp_number?: T;
+  mail?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

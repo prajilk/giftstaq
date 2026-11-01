@@ -7,8 +7,8 @@ const Widget = ({
   whatsapp_number,
   mail,
 }: {
-  whatsapp_number: string;
-  mail: string;
+  whatsapp_number?: string | null;
+  mail?: string | null;
 }) => {
   if (!whatsapp_number && !mail) return null;
   return (
