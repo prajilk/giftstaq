@@ -98,6 +98,12 @@ export const Header: GlobalConfig = {
       name: "mail",
       type: "email",
     },
+    {
+      name: "catalog",
+      type: "upload",
+      relationTo: "media",
+      hasMany: false,
+    },
   ],
   hooks: {
     afterChange: [revalidateHeaderOrFooter],

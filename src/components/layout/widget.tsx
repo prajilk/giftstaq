@@ -1,18 +1,36 @@
-import { Mail } from "lucide-react";
+import { FileText, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Media } from "@/payload-types";
 
 const Widget = ({
   whatsapp_number,
   mail,
+  catalog,
 }: {
   whatsapp_number?: string | null;
   mail?: string | null;
+  catalog?: Media | null | string;
 }) => {
-  if (!whatsapp_number && !mail) return null;
+  if (!whatsapp_number && !mail && !catalog) return null;
   return (
     <div className="flex flex-col gap-3 fixed bottom-5 right-4 md:right-6 z-90">
+      {catalog && typeof catalog !== "string" && (
+        <Tooltip>
+          <TooltipTrigger>
+            <Link href={catalog?.url ?? ""} target="_blank">
+              <div
+                aria-label="Catalog"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow-lg hover:bg-white/80 transition cursor-pointer"
+              >
+                <FileText />
+              </div>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="left">View Catalog</TooltipContent>
+        </Tooltip>
+      )}
       {whatsapp_number && (
         <Tooltip>
           <TooltipTrigger>

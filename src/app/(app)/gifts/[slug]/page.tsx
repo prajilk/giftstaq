@@ -20,8 +20,8 @@ const GiftsPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
   return (
     <main className="container container-padding-x pb-10 lg:pb-12">
-      <h1 className="text-3xl mb-7 pt-5 font-anton">{page.title}</h1>
-      <p className="text-lg mb-7">{page.description}</p>
+      <h1 className="text-3xl mb-3 pt-5 font-anton">{page.title}</h1>
+      <p className="text-xs mb-7 text-gray-500">{page.description}</p>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {page.images?.map(
           (image) =>

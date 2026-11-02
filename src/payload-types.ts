@@ -782,6 +782,7 @@ export interface Header {
   }[];
   whatsapp_number?: string | null;
   mail?: string | null;
+  catalog?: (string | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1181,6 +1182,7 @@ export interface HeaderSelect<T extends boolean = true> {
       };
   whatsapp_number?: T;
   mail?: T;
+  catalog?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -561,7 +561,7 @@ function Thumbnail({
       onClick={onClick}
       aria-label={`Show ${image} view`}
       className={cn(
-        "shrink-0 aspect-square w-full rounded-lg border-2 bg-secondary p-1.5 transition",
+        "relative shrink-0 aspect-square w-full rounded-lg border-2 bg-secondary transition overflow-hidden",
         active
           ? "border-red-500"
           : "border-transparent hover:border-neutral-300",
@@ -570,8 +570,9 @@ function Thumbnail({
       <Image
         src={image}
         alt="Product image"
-        width={400}
-        height={400}
+        // width={400}
+        // height={400}
+        fill
         className="h-full w-full"
         unoptimized
       />

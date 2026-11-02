@@ -63,6 +63,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               <Widget
                 whatsapp_number={header?.whatsapp_number}
                 mail={header?.mail}
+                catalog={header?.catalog}
               />
             </TooltipProvider>
           </ColorsProvider>

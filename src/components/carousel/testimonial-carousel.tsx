@@ -24,7 +24,7 @@ const TestimonialCarousel = ({
     >
       <CarouselContent>
         {testimonials.map((data, i) => (
-          <CarouselItem key={data.id || i} className="basis-full bg-green-500">
+          <CarouselItem key={data.id || i} className="basis-full">
             <div className="flex flex-col lg:flex-row gap-6 w-full">
               {typeof data.image !== "string" &&
                 data.image.mimeType &&
