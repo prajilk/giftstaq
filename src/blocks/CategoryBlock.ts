@@ -13,5 +13,27 @@ export const CategoryBlock: Block = {
       type: "text",
       required: true,
     },
+    {
+      name: "collections",
+      type: "array",
+      fields: [
+        {
+          name: "title",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "link",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "image",
+          type: "upload",
+          relationTo: "media",
+          required: true,
+        },
+      ],
+    },
   ],
 };

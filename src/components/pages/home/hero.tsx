@@ -23,6 +23,8 @@ const Hero = ({
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0); // 0-100, applies to the active dot
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const rafRef = useRef<number>(0);
@@ -171,7 +173,7 @@ const Hero = ({
                     </picture>
                   )}
 
-                  {isVideo && active.url && (
+                  {isVideo && active.url && mounted && (
                     <video
                       src={active.url}
                       ref={(el) => {

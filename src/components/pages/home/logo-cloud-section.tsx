@@ -30,7 +30,7 @@ export default LogoCloudSection;
 
 function Card({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="relative bg-[#C31B24] rounded-md aspect-video overflow-hidden">
+    <div className="relative bg-[#C31B24]= rounded-md aspect-video overflow-hidden">
       <Image
         src={src}
         alt={alt}

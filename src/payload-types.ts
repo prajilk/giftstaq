@@ -264,6 +264,7 @@ export interface LegalPage {
 export interface TemporaryPage {
   id: string;
   title: string;
+  description: string;
   /**
    * e.g. "employee-onboarding" — used in the URL - lowercase only!
    */
@@ -458,6 +459,7 @@ export interface LegalPagesSelect<T extends boolean = true> {
  */
 export interface TemporaryPagesSelect<T extends boolean = true> {
   title?: T;
+  description?: T;
   slug?: T;
   whatsappNumber?: T;
   images?: T;
@@ -546,7 +548,7 @@ export interface HeroBlock {
   backgrounds: {
     desktopImage: string | Media;
     /**
-     * Optional. Falls back to the desktop image if empty.
+     * Optional image or video for mobile. Falls back to the desktop file if empty.
      */
     mobileImage?: (string | null) | Media;
     id?: string | null;
@@ -576,6 +578,14 @@ export interface ServicesBlock {
  */
 export interface CategoryBlock {
   heading: string;
+  collections?:
+    | {
+        title: string;
+        link: string;
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'category';
@@ -955,6 +965,14 @@ export interface ServicesBlockSelect<T extends boolean = true> {
  */
 export interface CategoryBlockSelect<T extends boolean = true> {
   heading?: T;
+  collections?:
+    | T
+    | {
+        title?: T;
+        link?: T;
+        image?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

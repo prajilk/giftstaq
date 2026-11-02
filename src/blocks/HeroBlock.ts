@@ -47,7 +47,8 @@ export const HeroBlock: Block = {
           type: "upload",
           relationTo: "media",
           admin: {
-            description: "Optional. Falls back to the desktop image if empty.",
+            description:
+              "Optional image or video for mobile. Falls back to the desktop file if empty.",
           },
         },
       ],

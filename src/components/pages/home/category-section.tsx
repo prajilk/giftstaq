@@ -1,22 +1,23 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import CategoryList from "./category-list";
-import { getQueryClient } from "@/lib/query/get-query-client";
-import { collectionKeys } from "@/lib/query/keys";
-import { getCollections } from "@/lib/shopify/collections";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+// import { Button } from "@/components/ui/button";
+// import { ArrowRight } from "lucide-react";
+// import Link from "next/link";
+// import CategoryList from "./category-list";
+// import { getQueryClient } from "@/lib/query/get-query-client";
+// import { collectionKeys } from "@/lib/query/keys";
+// import { getCollections } from "@/lib/shopify/collections";
+// import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { CategoryBlock } from "@/payload-types";
+import CustomCategoryList from "./custom-category-list";
 
-const CategorySection = async ({ heading }: CategoryBlock) => {
-  const queryClient = getQueryClient();
+const CategorySection = async ({ heading, collections }: CategoryBlock) => {
+  // const queryClient = getQueryClient();
 
-  await queryClient
-    .query({
-      queryKey: collectionKeys.list(6),
-      queryFn: () => getCollections(6),
-    })
-    .catch(() => {}); // graceful degrade to client-side fetch, same reasoning as the products listing
+  // await queryClient
+  //   .query({
+  //     queryKey: collectionKeys.list(6),
+  //     queryFn: () => getCollections(6),
+  //   })
+  //   .catch(() => {}); // graceful degrade to client-side fetch, same reasoning as the products listing
 
   return (
     <section className="container container-padding-x py-8 lg:py-16 space-y-5 md:space-y-10">
@@ -28,9 +29,9 @@ const CategorySection = async ({ heading }: CategoryBlock) => {
           </Button>
         </Link> */}
       </div>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <CategoryList />
-      </HydrationBoundary>
+      {/* <HydrationBoundary state={dehydrate(queryClient)}> */}
+      <CustomCategoryList collections={collections} />
+      {/* </HydrationBoundary> */}
     </section>
   );
 };
