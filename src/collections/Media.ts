@@ -15,6 +15,6 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     staticDir: path.resolve(process.cwd(), "uploads/media"),
-    mimeTypes: ["image/*", "application/pdf"],
+    mimeTypes: ["image/*", "application/pdf", "video/*"],
   },
 };

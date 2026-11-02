@@ -179,6 +179,7 @@ const Hero = ({
                       }}
                       autoPlay
                       muted
+                      loop
                       controls={false}
                       playsInline
                       className="absolute inset-0 size-full object-cover pointer-events-none"
