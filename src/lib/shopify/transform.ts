@@ -1,5 +1,4 @@
 import { ColorMap } from "../payload/colors";
-import { isValidJSON } from "../utils";
 import { getColorHex } from "./colors";
 import {
   ShopifyCollectionDetail,
@@ -269,10 +268,17 @@ export function toProductDetail(
         .map((v) => v.image?.url)
         .filter((url): url is string => Boolean(url));
 
+      const ownImages = Array.from(
+        new Set([...matchedImages, ...variantImages]),
+      );
+
+      // Use the color's own photos first, then photos no color owns, then a single image
       const images =
-        matchedImages.length > 0 || variantImages.length > 0
-          ? Array.from(new Set([...matchedImages, ...variantImages]))
-          : allImages.map((i) => i.url);
+        ownImages.length > 0
+          ? ownImages
+          : sharedImages.length > 0
+            ? sharedImages
+            : allImages.slice(0, 1).map((i) => i.url);
 
       // const sizes = (sizeOption?.optionValues ?? []).map((sizeValue) => {
       //   const matchingVariant = variants.find(

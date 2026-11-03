@@ -182,10 +182,18 @@ const Hero = ({
                       autoPlay
                       muted
                       loop
+                      webkit-playsinline="true"
                       controls={false}
+                      disablePictureInPicture
                       playsInline
                       className="absolute inset-0 size-full object-cover pointer-events-none"
-                    />
+                    >
+                      <source
+                        src={active.url.replace(".mp4", ".webm")}
+                        type="video/webm"
+                      />
+                      <source src={active.url} type="video/mp4" />
+                    </video>
                   )}
                 </div>
               </CarouselItem>
