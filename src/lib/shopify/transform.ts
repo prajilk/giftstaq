@@ -127,7 +127,10 @@ export function toCollectionHero(
 }
 
 function slugify(value: string): string {
-  return value.toLowerCase().trim().replace(/\s+/g, "-");
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-") // "Black/White", "Black / White", "Navy Blue" all work
+    .replace(/^-+|-+$/g, "");
 }
 
 function getFilenameSlug(url: string): string {
@@ -136,19 +139,31 @@ function getFilenameSlug(url: string): string {
   return file.replace(/\.[^/.]+$/, "");
 }
 
+function matchesSlug(portion: string, slug: string) {
+  return portion === slug || portion.startsWith(`${slug}-`);
+}
+
 /**
  * Takes everything after the first underscore as the "color portion" —
  * doesn't care what's before it (handle, typo, anything), since the
  * image is already guaranteed to belong to this product via the query itself.
  */
-function imageMatchesColor(imageUrl: string, colorSlug: string): boolean {
+function imageMatchesColor(
+  imageUrl: string,
+  colorSlug: string,
+  allColorSlugs: string[],
+): boolean {
   const fileSlug = getFilenameSlug(imageUrl);
-  const underscoreIndex = fileSlug.indexOf("_");
+  const i = fileSlug.indexOf("_");
+  if (i === -1) return false;
 
-  if (underscoreIndex === -1) return false; // no underscore = doesn't follow the convention at all
+  const portion = fileSlug.slice(i + 1); // "navy-blue" or "navy-blue-back"
+  if (!matchesSlug(portion, colorSlug)) return false;
 
-  const colorPortion = fileSlug.slice(underscoreIndex + 1); // "navy-blue" or "navy-blue-back"
-  return colorPortion === colorSlug || colorPortion.startsWith(`${colorSlug}-`);
+  // "black-white" is a better fit than "black", so don't give it to Black
+  return !allColorSlugs.some(
+    (other) => other.length > colorSlug.length && matchesSlug(portion, other),
+  );
 }
 
 function parseMetafieldAsList(mf: ShopifyMetafield): string[] {
@@ -213,6 +228,26 @@ export function toProductDetail(
         ),
     );
 
+  // 1. Compute the slug list ONCE, before anything uses it
+  const allColorSlugs = (colorOption?.optionValues ?? []).map((v) =>
+    slugify(v.name),
+  );
+
+  // 2. Call site one: working out which images no color owns (the shared fallback)
+  const claimedUrls = new Set(
+    allImages
+      .filter((img) =>
+        allColorSlugs.some((slug) =>
+          imageMatchesColor(img.url, slug, allColorSlugs),
+        ),
+      )
+      .map((img) => img.url),
+  );
+  variants.forEach((v) => v.image?.url && claimedUrls.add(v.image.url));
+  const sharedImages = allImages
+    .filter((img) => !claimedUrls.has(img.url))
+    .map((i) => i.url);
+
   const colors: ColorVariantData[] = (colorOption?.optionValues ?? []).map(
     (colorValue) => {
       const colorName = colorValue.name;
@@ -225,8 +260,9 @@ export function toProductDetail(
         ),
       );
 
+      // 3. Call site two: images for this specific color
       const matchedImages = allImages
-        .filter((img) => imageMatchesColor(img.url, colorSlug))
+        .filter((img) => imageMatchesColor(img.url, colorSlug, allColorSlugs))
         .map((img) => img.url);
 
       const variantImages = variantsForColor
