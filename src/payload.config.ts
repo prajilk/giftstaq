@@ -56,6 +56,12 @@ export default buildConfig({
     url: process.env.DATABASE_URL || "",
   }),
   sharp,
+  upload: {
+    requestSizeLimit: 100 * 1024 * 1024, // 100 MiB
+    limits: {
+      fileSize: 35000000, // 35MB
+    },
+  },
   // plugins: [
   //   vercelBlobStorage({
   //     enabled: true,
