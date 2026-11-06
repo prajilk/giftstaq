@@ -69,6 +69,7 @@ export interface ProductDetailData {
   description: string;
   descriptionHtml: string;
   collectionName: string | null;
+  collectionHandle: string | null;
   price: { amount: string; currencyCode: string };
   colors: ColorVariantData[];
   metafields: Record<string, string>;
@@ -352,6 +353,7 @@ export function toProductDetail(
     description: product.description,
     descriptionHtml: product.descriptionHtml,
     collectionName: product.collections?.edges[0]?.node.title ?? null,
+    collectionHandle: product.collections?.edges[0]?.node.handle ?? null,
     price: product.priceRange.minVariantPrice,
     metafields,
     colors,

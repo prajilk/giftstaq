@@ -154,7 +154,7 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
 
   return (
     <section className="container container-padding-x pb-12 lg:pb-16">
-      <Link href="/products">
+      <Link href={`/collections/${product.collectionHandle}`}>
         <Button variant="link" className="text-black">
           <ArrowLeft />
           Back to product listing
