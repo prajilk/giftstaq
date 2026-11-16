@@ -80,6 +80,7 @@ export interface ProductDetailData {
   sizes: SizeData[]; // used for size-only products
   defaultVariant: { id: string; available: boolean } | null; // no color and no size
   priceTiers: PriceTier[];
+  variantSkus: Record<string, string>;
 }
 
 // Fields shown as their own callout sections, not in the generic table
@@ -347,13 +348,28 @@ export function toProductDetail(
         : mf.value,
     }));
 
+  const variantSkus: Record<string, string> = {};
+  for (const v of variants) {
+    if (v.sku) variantSkus[v.id] = v.sku;
+  }
+
   return {
     id: product.id,
     title: product.title,
     description: product.description,
     descriptionHtml: product.descriptionHtml,
-    collectionName: product.collections?.edges[0]?.node.title ?? null,
-    collectionHandle: product.collections?.edges[0]?.node.handle ?? null,
+    collectionName:
+      product.collections?.edges[1]?.node.title !== "All Products"
+        ? product.collections?.edges[1]?.node.title
+        : (product.collections?.edges[0]?.node.title ??
+          product.collections?.edges[0]?.node.title ??
+          null),
+    collectionHandle:
+      product.collections?.edges[1]?.node.handle !== "all-products"
+        ? product.collections?.edges[1]?.node.handle
+        : (product.collections?.edges[0]?.node.handle ??
+          product.collections?.edges[0]?.node.handle ??
+          null),
     price: product.priceRange.minVariantPrice,
     metafields,
     colors,
@@ -369,6 +385,7 @@ export function toProductDetail(
     priceTiers: parsePriceTiers(
       rawMetafields.find((mf) => mf.key === "price_tiers"),
     ),
+    variantSkus,
   };
 }
 

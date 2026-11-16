@@ -87,6 +87,7 @@ export interface ShopifyOption {
 
 export interface ShopifyVariant {
   id: string;
+  sku: string | null;
   availableForSale: boolean;
   selectedOptions: { name: string; value: string }[];
   image: ShopifyImage | null;

@@ -152,6 +152,10 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
     Math.max(galleryImages.length - 1, 0),
   );
 
+  const selectedSku = purchasableVariantId
+    ? product.variantSkus[purchasableVariantId]
+    : null;
+
   return (
     <section className="container container-padding-x pb-12 lg:pb-16">
       <Link href={`/collections/${product.collectionHandle}`}>
@@ -223,7 +227,7 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
         </div>
 
         {/* ---------------- Details ---------------- */}
-        <div className="flex flex-col gap-4 pt-1">
+        <div className="flex flex-col gap-3 pt-1">
           <div>
             <p className="text-xs font-medium uppercase text-[#414651]">
               {product.collectionName}
@@ -239,6 +243,12 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
             </span>
             <span className="text-sm uppercase">Per unit</span>
           </div>
+
+          {selectedSku && (
+            <p className="text-xs uppercase text-[#717680]">
+              SKU: <span className="font-bold text-black">{selectedSku}</span>
+            </p>
+          )}
 
           {/* Colors */}
           {hasColors && (

@@ -88,6 +88,7 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
         edges {
           node {
             id
+            sku
             availableForSale
             selectedOptions {
               name
@@ -106,7 +107,7 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = gql`
           }
         }
       }
-      collections(first: 1) {
+      collections(first: 2) {
         edges {
           node {
             title
