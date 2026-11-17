@@ -3,15 +3,21 @@ import { searchProducts } from "@/lib/shopify/search";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const q = searchParams.get("q")?.trim() ?? "";
-  const first = Math.min(Number(searchParams.get("first")) || 10, 20);
+  const q = (searchParams.get("q")?.trim() ?? "").slice(0, 100);
+  const first = Math.min(Number(searchParams.get("first")) || 10, 60);
+  const after = searchParams.get("after") || undefined;
 
   if (!q) {
-    return NextResponse.json({ products: { edges: [] } });
+    return NextResponse.json({
+      products: {
+        edges: [],
+        pageInfo: { hasNextPage: false, endCursor: null },
+      },
+    });
   }
 
   try {
-    const data = await searchProducts(q, first);
+    const data = await searchProducts(q, first, after);
     return NextResponse.json(data, {
       headers: {
         "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",

@@ -19,7 +19,8 @@ export const collectionKeys = {
 
 export const searchKeys = {
   all: ["search"] as const,
-  query: (term: string) => [...searchKeys.all, term] as const,
+  query: (term: string) => [...searchKeys.all, term] as const, // dropdown (useQuery)
+  results: (term: string) => [...searchKeys.all, "results", term] as const, // page (useInfiniteQuery)
 };
 
 export const recommendationKeys = {

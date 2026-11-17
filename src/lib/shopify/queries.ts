@@ -360,8 +360,8 @@ export const GET_COLLECTIONS_QUERY = gql`
 `;
 
 export const SEARCH_PRODUCTS_QUERY = gql`
-  query SearchProducts($query: String!, $first: Int!) {
-    products(first: $first, query: $query) {
+  query SearchProducts($query: String!, $first: Int!, $after: String) {
+    products(first: $first, after: $after, query: $query, sortKey: RELEVANCE) {
       edges {
         node {
           id
@@ -379,7 +379,25 @@ export const SEARCH_PRODUCTS_QUERY = gql`
               currencyCode
             }
           }
+          options(first: 10) {
+            name
+            optionValues {
+              name
+            }
+          }
+          collections(first: 1) {
+            edges {
+              node {
+                title
+                handle
+              }
+            }
+          }
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }

@@ -3,7 +3,7 @@
 import { Loader2, SearchIcon, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useRef, useState } from "react";
+import { type SubmitEvent, useRef, useState } from "react";
 import { useProductSearch } from "@/hooks/useProductSearch";
 import Link from "next/link";
 import { useClickOutside } from "@/hooks/useClickOutside";
@@ -14,11 +14,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useRouter } from "next/navigation";
 
 const Search = () => {
   const [term, setTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { data, isLoading, isFetching } = useProductSearch(term);
 
@@ -43,6 +47,17 @@ const Search = () => {
     setMobileOpen(false);
     setIsOpen(false);
   };
+
+  function handleSubmit(e: SubmitEvent) {
+    e.preventDefault();
+    const q = term.trim();
+    if (q.length < 2) return;
+    setIsOpen(false);
+    setMobileOpen(false);
+    inputRef.current?.blur();
+    mobileInputRef.current?.blur();
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  }
 
   const SearchResults = () => (
     <>
@@ -87,9 +102,14 @@ const Search = () => {
     <>
       {/* Desktop search */}
       <div ref={ref} className="relative hidden w-full max-w-md lg:block">
-        <div className="relative flex gap-2">
+        <form
+          onSubmit={handleSubmit}
+          role="search"
+          className="relative flex gap-2"
+        >
           <Input
             type="text"
+            ref={inputRef}
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             onFocus={() => setIsOpen(true)}
@@ -102,6 +122,7 @@ const Search = () => {
             variant="secondary"
             onClick={() => setTerm("")}
             disabled={!term}
+            type="button"
             aria-label="Clear search"
             className="cursor-pointer bg-white shadow-none"
           >
@@ -113,7 +134,7 @@ const Search = () => {
               <SearchIcon />
             )}
           </Button>
-        </div>
+        </form>
 
         {isOpen && showResults && (
           <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg">
@@ -154,7 +175,7 @@ const Search = () => {
           </SheetHeader>
 
           <div className="border-b p-4">
-            <div className="relative">
+            <form onSubmit={handleSubmit} role="search" className="relative">
               <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 
               <Input
@@ -179,7 +200,7 @@ const Search = () => {
                   <X className="h-4 w-4" />
                 </button>
               )}
-            </div>
+            </form>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto">
