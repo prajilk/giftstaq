@@ -169,7 +169,7 @@ const ProductDetailsSection = ({ handle }: { handle: string }) => {
         {/* ---------------- Gallery ---------------- */}
         <div className="flex flex-col-reverse lg:flex-row gap-3 lg:sticky top-22 lg:h-screen">
           {/* Thumbnail rail */}
-          <div className="flex w-16 lg:flex-col gap-3 sm:w-20 h-full overflow-y-scroll scrollbar-none shrink-0">
+          <div className="flex w-16 lg:flex-col gap-3 sm:w-20 overflow-y-scroll scrollbar-none shrink-0">
             {galleryImages.map((image, index) => (
               <Thumbnail
                 key={index}
